@@ -1,0 +1,36 @@
+﻿@page "/deallist"
+
+@inject IDealService ideal;
+
+<PageTitle>Countries List</PageTitle>
+
+<h3>Countries List</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name: </th>
+            <th>Description: </th>
+            <th>Price: </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var d in ideal.deals)
+        {
+            <tr>
+                <td>@d.Name</td>
+                <td>@d.Description</td>
+                <td>@d.Price</td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await ideal.GetDeals();
+    }
+
+}

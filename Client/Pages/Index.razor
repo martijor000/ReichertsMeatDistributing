@@ -1,0 +1,49 @@
+﻿@page "/"
+@using ReichertsMeatDistributing.Shared
+@using System.Net.Http.Json
+@inject HttpClient httpClient;
+@inject IDealService ideal;
+
+
+<h1>New Deal</h1>
+
+@if (submitting)
+{
+    <p>Submitting...</p>
+}
+else if (submitComplete)
+{
+    <p>Deal submitted successfully.</p>
+}
+
+<div>
+    <label>Name:</label>
+    <input type="text" @bind-value="@newDeal.Name" />
+</div>
+<div>
+    <label>Description:</label>
+    <input type="text" @bind-value="@newDeal.Description" />
+</div>
+<div>
+    <label>Price:</label>
+    <input type="number" @bind-value="@newDeal.Price" />
+</div>
+
+<button @onclick="SubmitDeal">Submit</button>
+
+@code {
+    private Deal newDeal = new Deal();
+    private bool submitting = false;
+    private bool submitComplete = false;
+
+    private async Task SubmitDeal()
+    {
+        submitting = true;
+        submitComplete = false;
+
+
+        await ideal.AddDeal(newDeal);
+
+        submitting = false;
+    }
+}
