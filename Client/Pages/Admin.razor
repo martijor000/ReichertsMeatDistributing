@@ -1,0 +1,76 @@
+﻿@using ReichertsMeatDistributing.Shared;
+@using ReichertsMeatDistributingWebProject.Pages;
+@page "/admin/deals"
+@inject CustomAuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager navigationManager
+<div>
+<h1>Deals</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @if(deals != null){
+                @foreach (var deal in deals)
+                {
+                    <tr>
+                        <td>@deal.Name</td>
+                        <td>@deal.Description</td>
+                        <td>@deal.Price.ToString("c")</td>
+                        <td><a href="/admin/deals/edit/@deal.id">Edit</a></td>
+                        <td><button @onclick="()=>DeleteDeal(deal.id)">Delete</button></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+
+<button @onclick="NavigateToAddDealPage">Add Deal</button>
+
+</div>
+
+@code {
+
+    private List<Deal> deals;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (!user.Identity.IsAuthenticated)
+        {
+            navigationManager.NavigateTo("/");
+        }
+        else if (!user.IsInRole("admin"))
+        {
+            navigationManager.NavigateTo("/");
+        }
+        await LoadDealsAsync();
+    }
+
+    private async Task LoadDealsAsync()
+    {
+        //deals = await localStorageService.GetDealsAsync();
+    }
+
+    private async Task DeleteDeal(int dealId)
+    {
+        //await localStorageService.DeleteDealAsync(dealId);
+        await LoadDealsAsync();
+    }
+
+    private void NavigateToAddDealPage()
+    {
+        navigationManager.NavigateTo("/admin/deals/add");
+    }
+
+}

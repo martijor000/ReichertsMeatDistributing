@@ -1,0 +1,90 @@
+﻿.imgContainer {
+    position: relative;
+    width: 100%;
+    height: 980px;
+    background-size: cover;
+    color: white;
+    background-image: url(../Pictures/ReichertsDistributing.png);
+}
+
+.imgContainer .row:last-child .col-md-4:last-child {
+    overflow-y: auto;
+    word-wrap: break-word;
+    padding: 20px;
+}
+
+.image-overlay{
+    width: 100%;
+    height: 980px;
+    background-color: rgba(0, 0, 0, 0.5)
+}
+
+h1 span {
+    color: #B9DB80;
+}
+
+.col-md-4 button {
+    color: whitesmoke;
+    height: 100%;
+    overflow: hidden;
+    font-size: 40px;
+    border-radius: 0;
+}
+
+.position-absolute{
+    height: 100%;
+}
+
+
+.row:last-child .col-md-4:last-child {
+    background-color: darkolivegreen;
+    text-align: center;
+    padding: 5%;
+}
+
+col-md-4 h1 {
+    text-shadow: 2px 2px 2px black;
+}
+
+col-md-4 h2 {
+    text-shadow: 1px 1px 1px black;
+}
+
+.imgContainer .container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    background-color: none;
+}
+
+.imgContainer .card-body, .imgContainer .card{
+    background-color: transparent;
+    color: white;
+}
+
+#offerTitle{
+    align-self: center;
+}
+
+.text-center:first-child{
+    padding: 5%;
+    font-size: 60px;
+}
+
+.text-center:last-child {
+    padding: 5%;
+    font-size: 35px;
+}
+
+.col-md-12{
+    float: right;
+}
+
+@media(max-width: 780px){
+
+    .imgContainer .container{
+        top: 40%;
+    }
+}

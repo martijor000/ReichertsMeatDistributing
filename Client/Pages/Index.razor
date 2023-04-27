@@ -1,49 +1,94 @@
 ﻿@page "/"
-@using ReichertsMeatDistributing.Shared
-@using System.Net.Http.Json
-@inject HttpClient httpClient;
-@inject IDealService ideal;
+@inject NavigationManager NavigationManager
 
 
-<h1>New Deal</h1>
 
-@if (submitting)
-{
-    <p>Submitting...</p>
-}
-else if (submitComplete)
-{
-    <p>Deal submitted successfully.</p>
-}
-
-<div>
-    <label>Name:</label>
-    <input type="text" @bind-value="@newDeal.Name" />
+<div class="imgContainer">
+    <div class="image-overlay"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div>
+                    <h1>NOW <span>SELLING</span> TO THE PUBLIC!</h1>
+                    <p>
+                        Libero nunc consequat interdum varius sit amet.
+                        Interdum velit euismod in pellentesque massa.
+                        Velit scelerisque in dictum non consectetur a.
+                    </p>
+                </div>
+            </div>
+        </div>
+            @if (currentDeal != null)
+            {
+                <div class="row">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4 position-relative">
+                            <div>
+                                <h1>Deal Of The Week</h1><br/>
+                                <div>
+                                    <h2>@currentDeal.Name</h2><br/>
+                                    <p>@currentDeal.Description</p><br/>
+                                    <p>@currentDeal.Price</p>
+                                </div>
+                        @if (deals.Count > 1) 
+                        {
+                            <div class="position-absolute top-50 start-0 translate-middle-y">
+                                <button class="btn btn-arrow shadow-none" onclick="@PreviousSlideHandler">&#8249;</button>
+                            </div>
+                            <div class="position-absolute top-50 end-0 translate-middle-y">
+                                <button class="btn btn-arrow shadow-none" onclick="@NextSlideHandler">&#8250;</button>
+                            </div>
+                        }
+                    </div>
+                    </div>
+                </div>
+            }
+    </div>
 </div>
-<div>
-    <label>Description:</label>
-    <input type="text" @bind-value="@newDeal.Description" />
+
+
+<div class="container">
+    <h1 class="text-center">We Proudly Serve</h1>
+    <div class="row">
+        <div class="col-md-3 mb-3">
+            <div class="card">
+                <img src="/Pictures/Bar.jpg" width="300" height="200" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Bars</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card">
+                <img src="/Pictures/Restaurant.jpg" width="300" height="200" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Restaurants</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card">
+                <img src="/Pictures/BurgerBar.jpg" width="300" height="200" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Burger Bars</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card">
+                <img src="/Pictures/ConvenienceStore.jpg" width="300" height="200" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Convenience Stores</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h1 class="text-center">And <a href="/Products">More...</a></h1>
 </div>
-<div>
-    <label>Price:</label>
-    <input type="number" @bind-value="@newDeal.Price" />
-</div>
-
-<button @onclick="SubmitDeal">Submit</button>
-
-@code {
-    private Deal newDeal = new Deal();
-    private bool submitting = false;
-    private bool submitComplete = false;
-
-    private async Task SubmitDeal()
-    {
-        submitting = true;
-        submitComplete = false;
 
 
-        await ideal.AddDeal(newDeal);
-
-        submitting = false;
-    }
-}

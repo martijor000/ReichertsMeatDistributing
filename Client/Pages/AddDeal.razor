@@ -1,0 +1,50 @@
+﻿@using Microsoft.AspNetCore.Authorization;
+@using ReichertsMeatDistributingWebProject.Models;
+@attribute [Authorize]
+@page "/admin/deals/add"
+<div id="container">
+    <h1>Add Deal</h1>
+    <EditForm Model="@newDeal" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <InputText id="name" class="form-control" @bind-Value="newDeal.Name" />
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <InputTextArea id="description" class="form-control" @bind-Value="newDeal.Description" />
+        </div>
+
+        <div class="form-group">
+            <label for="price">Price:</label>
+            <InputNumber id="price" class="form-control" @bind-Value="newDeal.Price" />
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    private Deal newDeal = new Deal();
+
+    [Inject]
+    private NavigationManager navigationManager { get; set; }
+
+    private async Task HandleValidSubmit()
+    {
+        var newDeal = new Deal
+            {
+                Name = this.newDeal.Name,
+                Description = this.newDeal.Description,
+                Price = this.newDeal.Price
+            };
+
+        //await dealService.SaveDealAsync(newDeal);
+        navigationManager.NavigateTo("/admin/deals");
+    }
+}
