@@ -24,8 +24,8 @@
                         <td>@deal.Name</td>
                         <td>@deal.Description</td>
                         <td>@deal.Price.ToString("c")</td>
-                        <td><a href="/admin/deals/edit/@deal.id">Edit</a></td>
-                        <td><button @onclick="()=>DeleteDeal(deal.id)">Delete</button></td>
+                        <td><a href="/admin/deals/edit/@deal.Id">Edit</a></td>
+                        <td><button @onclick="()=>DeleteDeal(deal.Id)">Delete</button></td>
                     </tr>
                 }
             }
