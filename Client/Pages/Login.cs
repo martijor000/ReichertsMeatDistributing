@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace ReichertsMeatDistributingWebProject.Pages
+namespace ReichertsMeatDistributing.Client.Pages
 {
     partial class Login
     {

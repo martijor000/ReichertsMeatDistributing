@@ -3,7 +3,7 @@ using ReichertsMeatDistributing.Shared;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using ReichertsMeatDistributing.Client;
-using ReichertsMeatDistributingWebProject.Pages;
+using ReichertsMeatDistributing.Client.Pages;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");

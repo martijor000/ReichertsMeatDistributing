@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components.Authorization;
 
 
-namespace ReichertsMeatDistributingWebProject.Pages
+namespace ReichertsMeatDistributing.Client.Pages
 {
     public class CustomAuthenticationStateProvider : AuthenticationStateProvider
     {

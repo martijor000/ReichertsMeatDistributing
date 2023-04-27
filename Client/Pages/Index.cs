@@ -1,9 +1,10 @@
 ﻿using ReichertsMeatDistributing.Shared;
 
-namespace ReichertsMeatDistributing.Pages
+namespace ReichertsMeatDistributing.Client.Pages
 {
     partial class Index
     {
+
         private List<Deal> deals;
         private Timer timer;
         private int totalSlides;
@@ -14,7 +15,7 @@ namespace ReichertsMeatDistributing.Pages
         {
             LoadDealsAsync();
 
-            if(deals != null)
+            if (deals != null)
             {
                 timer = new Timer(UpdateDeal, null, 0, 10000);
                 currentSlideIndex = 0;
@@ -24,7 +25,7 @@ namespace ReichertsMeatDistributing.Pages
 
         private void LoadDealsAsync()
         {
-            deals = db.deals.ToList();
+            //deals = db.deals.ToList();
 
             if (deals != null)
             {
@@ -81,5 +82,3 @@ namespace ReichertsMeatDistributing.Pages
         }
     }
 }
-
-

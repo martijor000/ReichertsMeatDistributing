@@ -1,7 +1,7 @@
 ﻿using Microsoft.JSInterop;
 using System.Drawing;
 
-namespace ReichertsMeatDistributingWebProject.Shared
+namespace ReichertsMeatDistributing.Client.Shared
 {
     partial class MainLayout
     {
