@@ -13,7 +13,7 @@ namespace ReichertsMeatDistributing.Client.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            LoadDealsAsync();
+            await LoadDealsAsync();
 
             if (deals != null)
             {
@@ -23,15 +23,16 @@ namespace ReichertsMeatDistributing.Client.Pages
             }
         }
 
-        private void LoadDealsAsync()
+        private async Task LoadDealsAsync()
         {
-            //deals = db.deals.ToList();
-
+            await ideal.GetDeals();
+            deals = new List<Deal>(ideal.deals);
             if (deals != null)
             {
                 totalSlides = deals.Count;
             }
         }
+
 
         private void UpdateDeal(object state)
         {

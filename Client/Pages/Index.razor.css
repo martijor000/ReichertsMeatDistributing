@@ -16,7 +16,7 @@
 .image-overlay{
     width: 100%;
     height: 980px;
-    background-color: rgba(0, 0, 0, 0.5)
+    background-color: rgba(0, 0, 0, 0.7)
 }
 
 h1 span {
@@ -36,19 +36,13 @@ h1 span {
 }
 
 
-.row:last-child .col-md-4:last-child {
+.col-md-4.position-relative {
     background-color: darkolivegreen;
     text-align: center;
     padding: 5%;
 }
 
-col-md-4 h1 {
-    text-shadow: 2px 2px 2px black;
-}
 
-col-md-4 h2 {
-    text-shadow: 1px 1px 1px black;
-}
 
 .imgContainer .container {
     position: absolute;
@@ -68,14 +62,8 @@ col-md-4 h2 {
     align-self: center;
 }
 
-.text-center:first-child{
+.text-center{
     padding: 5%;
-    font-size: 60px;
-}
-
-.text-center:last-child {
-    padding: 5%;
-    font-size: 35px;
 }
 
 .col-md-12{
@@ -88,3 +76,4 @@ col-md-4 h2 {
         top: 40%;
     }
 }
+

@@ -8,5 +8,7 @@ namespace ReichertsMeatDistributing.Client.Services
         Task GetDeals();
         Task<Deal> GetDealById(int id);
         Task<int> AddDeal(Deal deal);
+        Task<int> UpdateDeal(int id, Deal deal);
+        Task<int> DeleteDeal(int id);
     }
 }

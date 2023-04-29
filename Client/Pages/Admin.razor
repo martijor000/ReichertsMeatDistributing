@@ -1,6 +1,7 @@
 ﻿@using ReichertsMeatDistributing.Shared;
 @page "/admin/deals"
 @inject CustomAuthenticationStateProvider AuthenticationStateProvider
+@inject IDealService ideal
 @inject NavigationManager navigationManager
 <div>
 <h1>Deals</h1>
@@ -58,11 +59,13 @@
 
     private async Task LoadDealsAsync()
     {
-        //deals = await localStorageService.GetDealsAsync();
+        await ideal.GetDeals();
+        deals = new List<Deal>(ideal.deals);
     }
 
     private async Task DeleteDeal(int dealId)
     {
+        await ideal.DeleteDeal(dealId);
         //await localStorageService.DeleteDealAsync(dealId);
         await LoadDealsAsync();
     }

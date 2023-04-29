@@ -1,6 +1,7 @@
 ﻿@using System.Security.Claims;
 @using Microsoft.AspNetCore.Authorization
 @using ReichertsMeatDistributing.Shared;
+@inject IDealService ideal;
 @page "/admin/deals/edit/{id:int}"
 @inject CustomAuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager navigationManager
@@ -61,8 +62,7 @@
         int idLength = uri.Length - idStartIndex;
         if (int.TryParse(uri.Substring(idStartIndex, idLength), out int dealId))
         {
-            // Use the ProductService to retrieve the deal with the specified ID
-            //deal = await dealService.GetDealByIdAsync(dealId);
+            deal = await ideal.GetDealById(dealId);
         }
         else
         {
@@ -73,16 +73,36 @@
 
     private async Task UpdateDeal()
     {
-        //await dealService.UpdateDeal(deal);
+        string uri = navigationManager.Uri;
+        int idStartIndex = uri.LastIndexOf("/") + 1;
+        int idLength = uri.Length - idStartIndex;
+        if (int.TryParse(uri.Substring(idStartIndex, idLength), out int dealId))
+        {
+            await ideal.UpdateDeal(dealId, deal);
+        }
+        else
+        {
+            // Deal ID was not provided or is not a valid integer
+            // Handle error or redirect to a default page
+        }
         navigationManager.NavigateTo("/admin/deals");
     }
 
     private async Task DeleteDeal()
     {
-        if (deal != null)
+
+        string uri = navigationManager.Uri;
+        int idStartIndex = uri.LastIndexOf("/") + 1;
+        int idLength = uri.Length - idStartIndex;
+        if (int.TryParse(uri.Substring(idStartIndex, idLength), out int dealId))
         {
-            //await dealService.DeleteDealAsync(deal.id);
-            navigationManager.NavigateTo("/admin/deals");
+            await ideal.DeleteDeal(dealId);
         }
+        else
+        {
+            // Deal ID was not provided or is not a valid integer
+            // Handle error or redirect to a default page
+        }
+        navigationManager.NavigateTo("/admin/deals");
     }
 }

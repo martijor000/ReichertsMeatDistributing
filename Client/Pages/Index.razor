@@ -1,5 +1,6 @@
 ﻿@page "/"
 @inject NavigationManager NavigationManager
+@inject IDealService ideal;
 
 
 
@@ -11,9 +12,7 @@
                 <div>
                     <h1>NOW <span>SELLING</span> TO THE PUBLIC!</h1>
                     <p>
-                        Libero nunc consequat interdum varius sit amet.
-                        Interdum velit euismod in pellentesque massa.
-                        Velit scelerisque in dictum non consectetur a.
+                        Purchasing from Reicherts Distributing company ensures that you receive high-quality, fresh meat products that have undergone rigorous quality control standards. Moreover, buying from these companies supports local businesses, contributing to the growth and sustainability of the community.
                     </p>
                 </div>
             </div>
@@ -50,40 +49,53 @@
 
 <div class="container">
     <h1 class="text-center">We Proudly Serve</h1>
-    <div class="row">
-        <div class="col-md-3 mb-3">
-            <div class="card">
-                <img src="/Pictures/Bar.jpg" width="300" height="200" class="card-img-top" alt="...">
-                <div class="card-body">
+    <div class="row justify-content-center">
+        <div class="col-md-4 mb-3">
+            <div class="card border-0">
+                <img src="/Pictures/Bar.jpg" width="300" height="200" class="card-img-top" style="object-fit: cover;" alt="...">
+                <div class="card-body text-center">
                     <h5 class="card-title">Bars</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <p class="card-text">We offer a wide range of products for bars, including breaded mozzarella sticks, jalapeno poppers, ground beef patties, chicken breast, deli ham, cocktail smokies, salad dressings, energy drinks, and more.</p>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 mb-3">
-            <div class="card">
-                <img src="/Pictures/Restaurant.jpg" width="300" height="200" class="card-img-top" alt="...">
-                <div class="card-body">
+        <div class="col-md-4 mb-3">
+            <div class="card border-0">
+                <img src="/Pictures/Restaurant.jpg" width="300" height="200" class="card-img-top" style="object-fit: cover;" alt="...">
+                <div class="card-body text-center">
                     <h5 class="card-title">Restaurants</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <p class="card-text">We offer a wide range of products for restaurants, including breaded appetizers, frozen meats, shredded cheeses, dressings, sauces, and breakfast items, as well as cleaning supplies and disposables.</p>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 mb-3">
-            <div class="card">
-                <img src="/Pictures/BurgerBar.jpg" width="300" height="200" class="card-img-top" alt="...">
-                <div class="card-body">
+        <div class="col-md-4 mb-3">
+            <div class="card border-0">
+                <img src="/Pictures/BurgerBar.jpg" width="300" height="200" class="card-img-top" style="object-fit: cover;" alt="...">
+                <div class="card-body text-center">
                     <h5 class="card-title">Burger Bars</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <p class="card-text">We offer a wide range of products for burger bars, including beef strips, chicken fillets, various cheeses, toppings, dressings, and condiments, along with a variety of packaging and cleaning supplies.</p>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 mb-3">
-            <div class="card">
-                <img src="/Pictures/ConvenienceStore.jpg" width="300" height="200" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">Convenience Stores</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        <div class="row justify-content-center ">
+            <div class="col-md-4 mb-3 pt-lg-5">
+                <div class="card border-0">
+                    <img src="/Pictures/ConvenienceStore.jpg" width="300" height="200" class="card-img-top" style="object-fit: cover;" alt="...">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Coffee Shops</h5>
+                        <p class="card-text">
+                            In an espresso shop, customers can enjoy the perfect cup of espresso with 2% milk, Hershey's chocolate syrup, Ghirardelli white chocolate, whipped topping and more.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3 pt-lg-5">
+                <div class="card border-0">
+                    <img src="/Pictures/ConvenienceStore.jpg" width="300" height="200" class="card-img-top" style="object-fit: cover;" alt="...">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Convenience Stores</h5>
+                        <p class="card-text">We have a range of convenience store items like mozzarella sticks, jalapeno poppers, chicken tenders, breakfast sandwiches, sausage patties, corn dogs, and snack burritos.</p>
+                    </div>
                 </div>
             </div>
         </div>
