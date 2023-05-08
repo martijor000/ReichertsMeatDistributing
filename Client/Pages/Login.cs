@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using System;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -6,16 +7,14 @@ namespace ReichertsMeatDistributing.Client.Pages
 {
     partial class Login
     {
-        private string _username = "RFBfWlZcVVxdVQ==";
-        private string _password = "ZFhcWA0HDw94";
+        private string _username = "O1Kz713QmFQaK8xLIivOXn4Mp0e/3/C4ENt2QabsaPc=";
+        private string _password = "BFRWcZjVHw7j22niLhzUaR3rsSm/XeMy5/si5qnHLtk=";
 
-        private string key = "0123456789abcdef";
+        private string key = "PrG9Q5lH63YpmOVmzMLgmceREYsvQFecxPfaK1Bht/k=";
 
         private string Username { get; set; }
         private string Password { get; set; }
         private string ErrorMessage { get; set; } // Add a property to store error message
-
-
 
         private void HandleLoginFormSubmit()
         {
@@ -31,7 +30,10 @@ namespace ReichertsMeatDistributing.Client.Pages
                 return;
             }
 
-            if(Convert.ToBase64String(EncryptStringToBytes_XOR(Username.ToLower(), key)) == _username && Convert.ToBase64String(EncryptStringToBytes_XOR(Password, key)) == _password)
+            string hashedUsername = HashStringWithSalt(Username.ToLower(), key);
+            string hashedPassword = HashStringWithSalt(Password, key);
+
+            if (hashedUsername == _username && hashedPassword == _password)
             {
                 AuthStateProvider.MarkUserAsAuthenticated("admin");
                 NavigationManager.NavigateTo("/admin/deals");
@@ -43,21 +45,22 @@ namespace ReichertsMeatDistributing.Client.Pages
             }
         }
 
-        private static byte[] EncryptStringToBytes_XOR(string plainText, string key)
+        private static string HashStringWithSalt(string input, string salt)
         {
-            var keyBytes = Encoding.ASCII.GetBytes(key);
-            var plainBytes = Encoding.UTF8.GetBytes(plainText);
+            byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+            byte[] saltBytes = Encoding.UTF8.GetBytes(salt);
 
-            var encryptedBytes = new byte[plainBytes.Length];
-
-            for (int i = 0; i < plainBytes.Length; i++)
+            byte[] hashedBytes;
+            using (var sha256 = new SHA256Managed())
             {
-                encryptedBytes[i] = (byte)(plainBytes[i] ^ keyBytes[i % keyBytes.Length]);
+                byte[] saltedInput = new byte[inputBytes.Length + saltBytes.Length];
+                Buffer.BlockCopy(inputBytes, 0, saltedInput, 0, inputBytes.Length);
+                Buffer.BlockCopy(saltBytes, 0, saltedInput, inputBytes.Length, saltBytes.Length);
+
+                hashedBytes = sha256.ComputeHash(saltedInput);
             }
 
-            return encryptedBytes;
+            return Convert.ToBase64String(hashedBytes);
         }
-
-
     }
 }

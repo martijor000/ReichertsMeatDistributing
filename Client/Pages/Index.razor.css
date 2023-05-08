@@ -4,7 +4,7 @@
     height: 980px;
     background-size: cover;
     color: white;
-    background-image: url(../Pictures/ReichertsDistributing.png);
+    background-image: url('pictures/reicherts.jpg');
 }
 
 .imgContainer .row:last-child .col-md-4:last-child {

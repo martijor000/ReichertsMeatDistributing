@@ -5,32 +5,32 @@
 @page "/admin/deals/edit/{id:int}"
 @inject CustomAuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager navigationManager
-<div id="container">
-<h1>Edit Deal</h1>
-    @if (deal == null)
-    {
-        <p>Loading...</p>
-    }
-    else
-    {
-    <form>
-        <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" class="form-control" id="name" @bind-value="@deal.Name">
-        </div>
-        <div class="form-group">
-            <label for="description">Description</label>
-            <input type="text" class="form-control" id="description" @bind-value="@deal.Description">
-        </div>
-        <div class="form-group">
-            <label for="price">Price</label>
-            <input type="number" class="form-control" id="price" @bind-value="@deal.Price">
-        </div>
-        <button type="submit" class="btn btn-primary" @onclick="UpdateDeal">Save</button>
-        <button type="button" class="btn btn-danger" @onclick="DeleteDeal">Delete</button>
-    </form>
-    }
-</div>
+    <div id="container">
+    <h1>Edit Deal</h1>
+        @if (deal == null)
+        {
+            <p>Loading...</p>
+        }
+        else
+        {
+        <form>
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" @bind-value="@deal.Name">
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <input type="text" class="form-control" id="description" @bind-value="@deal.Description">
+            </div>
+            <div class="form-group">
+                <label for="price">Price</label>
+                <input type="number" class="form-control" id="price" @bind-value="@deal.Price">
+            </div>
+            <button type="submit" class="btn btn-primary" @onclick="UpdateDeal">Save</button>
+            <button type="button" class="btn btn-danger" @onclick="DeleteDeal">Delete</button>
+        </form>
+        }
+    </div>
 
 @code {
     [Parameter]

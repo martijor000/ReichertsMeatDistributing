@@ -1,0 +1,46 @@
+﻿.imgContainer {
+    position: relative;
+    width: 100%;
+    height: 980px;
+    background-size: cover;
+    color: white;
+    background-image: url('pictures/reicherts.jpg');
+}
+
+
+.image-overlay{
+    width: 100%;
+    height: 980px;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px)
+}
+
+label{
+    font-size: 18px;
+}
+
+input {
+    background-color: white;
+}
+
+
+.card {
+    background-color: transparent;
+    border: none;
+    backdrop-filter: blur(4px);
+    padding: 20px;
+}
+
+
+.row{
+    padding-top: 25%;
+}
+
+.btn {
+    background-color: white;
+    color: black;
+}
+
+.form-group {
+    padding: 5px;
+}

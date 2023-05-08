@@ -3,38 +3,37 @@
 @inject CustomAuthenticationStateProvider AuthenticationStateProvider
 @inject IDealService ideal
 @inject NavigationManager navigationManager
-<div>
-<h1>Deals</h1>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Price</th>
-                <th></th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
+<div class="imgContainer">
+    <div>
+    <h1>Deals</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
 
-            @if(deals != null){
-                @foreach (var deal in deals)
-                {
-                    <tr>
-                        <td>@deal.Name</td>
-                        <td>@deal.Description</td>
-                        <td>@deal.Price.ToString("c")</td>
-                        <td><a href="/admin/deals/edit/@deal.Id">Edit</a></td>
-                        <td><button @onclick="()=>DeleteDeal(deal.Id)">Delete</button></td>
-                    </tr>
+                @if(deals != null){
+                    @foreach (var deal in deals)
+                    {
+                        <tr>
+                            <td>@deal.Name</td>
+                            <td>@deal.Description</td>
+                            <td>@deal.Price.ToString("c")</td>
+                            <td><a href="/admin/deals/edit/@deal.Id">Edit</a></td>
+                            <td><button @onclick="()=>DeleteDeal(deal.Id)">Delete</button></td>
+                        </tr>
+                    }
                 }
-            }
-        </tbody>
-    </table>
-
-
-<button @onclick="NavigateToAddDealPage">Add Deal</button>
-
+            </tbody>
+        </table>
+    <button @onclick="NavigateToAddDealPage">Add Deal</button>
+    </div>
 </div>
 
 @code {
