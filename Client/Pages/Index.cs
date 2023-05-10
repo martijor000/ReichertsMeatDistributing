@@ -15,7 +15,7 @@ namespace ReichertsMeatDistributing.Client.Pages
         {
             await LoadDealsAsync();
 
-            if (deals != null)
+            if (deals.Count != 0)
             {
                 timer = new Timer(UpdateDeal, null, 0, 10000);
                 currentSlideIndex = 0;
@@ -27,7 +27,7 @@ namespace ReichertsMeatDistributing.Client.Pages
         {
             await ideal.GetDeals();
             deals = new List<Deal>(ideal.deals);
-            if (deals != null)
+            if (deals.Count != 0)
             {
                 totalSlides = deals.Count;
             }
