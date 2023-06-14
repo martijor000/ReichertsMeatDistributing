@@ -1,32 +1,23 @@
 ﻿@page "/login"
 @inject CustomAuthenticationStateProvider AuthStateProvider
-@inject NavigationManager NavigationManager
+@using ReichertsMeatDistributing.Shared
 
-<div class="imgContainer">
-    <div class="image-overlay">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <h2 class="card-title text-center">Login</h2>
-                            <form @onsubmit="HandleLoginFormSubmit">
-                                <div class="form-group">
-                                    <label for="username">Username</label>
-                                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" @bind-value="@Username">
-                                </div>
-                                <div class="form-group">
-                                    <label for="password">Password</label>
-                                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" @bind-value="@Password">
-                                </div>
-                                <div class="form-group">
-                                    <button type="submit" class="btn btn-block">Login</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<h3>Login</h3>
+
+@if (isLoginFailed)
+{
+    <p class="text-danger">Invalid username or password. Please try again.</p>
+}
+
+<form @onsubmit="SubmitLoginForm">
+    <div class="form-group">
+        <label for="username">Username:</label>
+        <input id="username" type="text" class="form-control" @bind="@loginModel.Username" />
     </div>
-</div>
+    <div class="form-group">
+        <label for="password">Password:</label>
+        <input id="password" type="password" class="form-control" @bind="@loginModel.Password" />
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
+</form>
+

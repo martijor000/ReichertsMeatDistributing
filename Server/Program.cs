@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore.ResponseCompression;
-using ReichertsMeatDistributing.Client.Services;
+using Microsoft.EntityFrameworkCore;
+using ReichertsMeatDistributing.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-
+var conn = builder.Configuration.GetConnectionString("Default");
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

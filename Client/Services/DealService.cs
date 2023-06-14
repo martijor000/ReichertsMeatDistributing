@@ -8,7 +8,8 @@ namespace ReichertsMeatDistributing.Client.Services
     {
 
         private readonly HttpClient _httpClient;
-        public List<Deal> deals { get; set; } = new List<Deal>();
+        public List<WeeklyDeal> deals { get; set; } = new List<WeeklyDeal>();
+        public List<Product> products { get; set; } = new List<Product>();
         public HttpClient? HttpClient { get; }
 
 
@@ -17,13 +18,13 @@ namespace ReichertsMeatDistributing.Client.Services
             _httpClient = httpClient;
         }
 
-        public async Task GetDeals()
+        public async Task GetProducts()
         {
-            var response = await _httpClient.GetAsync("api/Deals");
-        
+            var response = await _httpClient.GetAsync("api/Products");
+
             if (response.IsSuccessStatusCode)
             {
-                deals = await response.Content.ReadFromJsonAsync<List<Deal>>();
+                products = await response.Content.ReadFromJsonAsync<List<Product>>();
             }
             else
             {
@@ -31,13 +32,27 @@ namespace ReichertsMeatDistributing.Client.Services
             }
         }
 
-        public async Task<Deal> GetDealById(int id)
+        public async Task GetDeals()
+        {
+            var response = await _httpClient.GetAsync("api/Deals");
+        
+            if (response.IsSuccessStatusCode)
+            {
+                deals = await response.Content.ReadFromJsonAsync<List<WeeklyDeal>>();
+            }
+            else
+            {
+                // handle error
+            }
+        }
+
+        public async Task<WeeklyDeal> GetDealById(int id)
         {
             var response = await _httpClient.GetAsync($"api/Deals/{id}");
 
             if (response.IsSuccessStatusCode)
             {
-                var deal = await response.Content.ReadFromJsonAsync<Deal>();
+                var deal = await response.Content.ReadFromJsonAsync<WeeklyDeal>();
                 return deal;
             }
             else
@@ -47,13 +62,13 @@ namespace ReichertsMeatDistributing.Client.Services
         }
 
 
-        public async Task<int> AddDeal(Deal deal)
+        public async Task<int> AddDeal(WeeklyDeal deal)
         {
             var response = await _httpClient.PostAsJsonAsync("api/Deals", deal);
 
             if (response.IsSuccessStatusCode)
             {
-                var createdDeal = await response.Content.ReadFromJsonAsync<Deal>();
+                var createdDeal = await response.Content.ReadFromJsonAsync<WeeklyDeal>();
                 return createdDeal.Id;
             }
             else
@@ -62,7 +77,7 @@ namespace ReichertsMeatDistributing.Client.Services
             }
         }
 
-        public async Task<int> UpdateDeal(int id, Deal deal)
+        public async Task<int> UpdateDeal(int id, WeeklyDeal deal)
         {
             var response = await _httpClient.PutAsJsonAsync($"api/Deals/{id}", deal);
 

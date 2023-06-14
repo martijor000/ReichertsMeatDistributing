@@ -31,14 +31,14 @@
 </div>
 
 @code {
-    private Deal newDeal = new Deal();
+    private WeeklyDeal newDeal = new WeeklyDeal();
 
     [Inject]
     private NavigationManager navigationManager { get; set; }
 
     private async Task HandleValidSubmit()
     {
-        var newDeal = new Deal
+        var newDeal = new WeeklyDeal
             {
                 Name = this.newDeal.Name,
                 Description = this.newDeal.Description,

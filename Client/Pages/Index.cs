@@ -1,15 +1,17 @@
 ﻿using ReichertsMeatDistributing.Shared;
+using System.Runtime.CompilerServices;
 
 namespace ReichertsMeatDistributing.Client.Pages
 {
     partial class Index
     {
 
-        private List<Deal> deals;
+        private List<WeeklyDeal> deals;
+        private List<Products> products;
         private Timer timer;
         private int totalSlides;
         private int currentSlideIndex;
-        private Deal currentDeal;
+        private WeeklyDeal currentDeal;
 
         protected override async Task OnInitializedAsync()
         {
@@ -26,7 +28,7 @@ namespace ReichertsMeatDistributing.Client.Pages
         private async Task LoadDealsAsync()
         {
             await ideal.GetDeals();
-            deals = new List<Deal>(ideal.deals);
+            deals = new List<WeeklyDeal>(ideal.deals);
             if (deals.Count != 0)
             {
                 totalSlides = deals.Count;

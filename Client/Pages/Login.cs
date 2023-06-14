@@ -1,66 +1,39 @@
 ﻿using Microsoft.AspNetCore.Components;
-using System;
-using System.Security.Cryptography;
-using System.Text;
+using ReichertsMeatDistributing.Shared;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
 
 namespace ReichertsMeatDistributing.Client.Pages
 {
-    partial class Login
+    public partial class Login
     {
-        private string _username = "O1Kz713QmFQaK8xLIivOXn4Mp0e/3/C4ENt2QabsaPc=";
-        private string _password = "BFRWcZjVHw7j22niLhzUaR3rsSm/XeMy5/si5qnHLtk=";
+        private LoginModel loginModel = new LoginModel();
+        private bool isLoginFailed = false;
 
-        private string key = "PrG9Q5lH63YpmOVmzMLgmceREYsvQFecxPfaK1Bht/k=";
+        [Inject]
+        private HttpClient HttpClient { get; set; }
 
-        private string Username { get; set; }
-        private string Password { get; set; }
-        private string ErrorMessage { get; set; } // Add a property to store error message
+        [Inject]
+        private NavigationManager NavigationManager { get; set; }
 
-        private void HandleLoginFormSubmit()
+        private async Task SubmitLoginForm()
         {
-            if (string.IsNullOrEmpty(Username))
-            {
-                ErrorMessage = "Please enter your username";
-                return;
-            }
+            isLoginFailed = false;
 
-            if (string.IsNullOrEmpty(Password))
-            {
-                ErrorMessage = "Please enter your password";
-                return;
-            }
+            // Call the login API endpoint and pass the loginModel
+            var response = await HttpClient.PostAsJsonAsync("api/Admin/login", loginModel);
 
-            string hashedUsername = HashStringWithSalt(Username.ToLower(), key);
-            string hashedPassword = HashStringWithSalt(Password, key);
-
-            if (hashedUsername == _username && hashedPassword == _password)
+            if (response.IsSuccessStatusCode)
             {
                 AuthStateProvider.MarkUserAsAuthenticated("admin");
                 NavigationManager.NavigateTo("/admin/deals");
             }
             else
             {
-                ErrorMessage = "Invalid username or password";
-                return;
+                // Failed login
+                isLoginFailed = true;
             }
-        }
-
-        private static string HashStringWithSalt(string input, string salt)
-        {
-            byte[] inputBytes = Encoding.UTF8.GetBytes(input);
-            byte[] saltBytes = Encoding.UTF8.GetBytes(salt);
-
-            byte[] hashedBytes;
-            using (var sha256 = new SHA256Managed())
-            {
-                byte[] saltedInput = new byte[inputBytes.Length + saltBytes.Length];
-                Buffer.BlockCopy(inputBytes, 0, saltedInput, 0, inputBytes.Length);
-                Buffer.BlockCopy(saltBytes, 0, saltedInput, inputBytes.Length, saltBytes.Length);
-
-                hashedBytes = sha256.ComputeHash(saltedInput);
-            }
-
-            return Convert.ToBase64String(hashedBytes);
         }
     }
 }

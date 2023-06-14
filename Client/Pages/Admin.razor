@@ -38,7 +38,7 @@
 
 @code {
 
-    private List<Deal> deals;
+    private List<WeeklyDeal> deals;
 
     protected override async Task OnInitializedAsync()
     {
@@ -59,7 +59,7 @@
     private async Task LoadDealsAsync()
     {
         await ideal.GetDeals();
-        deals = new List<Deal>(ideal.deals);
+        deals = new List<WeeklyDeal>(ideal.deals);
     }
 
     private async Task DeleteDeal(int dealId)
