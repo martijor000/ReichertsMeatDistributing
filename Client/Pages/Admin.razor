@@ -59,7 +59,7 @@
     private async Task LoadDealsAsync()
     {
         await ideal.GetDeals();
-        deals = new List<WeeklyDeal>(ideal.deals);
+        deals = ideal.deals;
     }
 
     private async Task DeleteDeal(int dealId)

@@ -55,13 +55,15 @@ namespace ReichertsMeatDistributing.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] WeeklyDeal deal)
         {
-            using IDbConnection conn = new MySqlConnection(_config.GetConnectionString(connectionId));
-            {
-                string sqlCommand = "INSERT INTO WeeklyDeal (Name, Description, Price) VALUES (@Name, @Description, @Price); SELECT last_insert_rowid()";
-                var newId = await conn.ExecuteScalarAsync<int>(sqlCommand, deal);
+                using IDbConnection conn = new MySqlConnection(_config.GetConnectionString(connectionId));
+                {
+                    string sqlCommand = "INSERT INTO WeeklyDeal (Name, Description, Price) VALUES (@Name, @Description, @Price); SELECT LAST_INSERT_ID()";
+                    var newId = await conn.ExecuteScalarAsync<int>(sqlCommand, deal);
 
-                return CreatedAtAction(nameof(GetById), new { id = newId }, deal);
-            }
+                    deal.Id = newId; // Set the ID of the deal object to the newly generated ID
+
+                    return CreatedAtAction(nameof(GetById), new { id = newId }, deal);
+                }
         }
 
         // PUT api/deals/1
