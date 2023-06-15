@@ -2,22 +2,36 @@
 @inject CustomAuthenticationStateProvider AuthStateProvider
 @using ReichertsMeatDistributing.Shared
 
-<h3>Login</h3>
 
-@if (isLoginFailed)
-{
-    <p class="text-danger">Invalid username or password. Please try again.</p>
-}
-
-<form @onsubmit="SubmitLoginForm">
-    <div class="form-group">
-        <label for="username">Username:</label>
-        <input id="username" type="text" class="form-control" @bind="@loginModel.Username" />
+<div class="imgContainer">
+    <div class="image-overlay">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2 class="card-title text-center">Login</h2>
+                            <form @onsubmit="SubmitLoginForm">
+                                <div class="form-group">
+                                    <label for="username">Username:</label>
+                                    <input id="username" type="text" class="form-control" @bind="@loginModel.Username" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password:</label>
+                                    <input id="password" type="password" class="form-control" @bind="@loginModel.Password" />
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-block">Login</button>
+                                </div>
+                            </form>
+                            @if (isLoginFailed)
+                            {
+                                <p class="text-danger">Invalid username or password. Please try again.</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        <label for="password">Password:</label>
-        <input id="password" type="password" class="form-control" @bind="@loginModel.Password" />
-    </div>
-    <button type="submit" class="btn btn-primary">Login</button>
-</form>
-
+</div>
