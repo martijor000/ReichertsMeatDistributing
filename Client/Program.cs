@@ -1,5 +1,5 @@
 using ReichertsMeatDistributing.Client.Services;
-using ReichertsMeatDistributing.Shared;
+using ReichertsClassLib;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using ReichertsMeatDistributing.Client;

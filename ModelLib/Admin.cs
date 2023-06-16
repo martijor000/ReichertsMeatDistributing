@@ -1,4 +1,4 @@
-﻿namespace ReichertsMeatDistributing.Server.Model
+﻿namespace ModelLib
 {
     public class Admin
     {

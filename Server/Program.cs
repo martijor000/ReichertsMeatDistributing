@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using ReichertsMeatDistributing.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 

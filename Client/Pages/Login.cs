@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
-using ReichertsMeatDistributing.Shared;
+using ReichertsClassLib;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;

@@ -1,4 +1,4 @@
-﻿using ReichertsMeatDistributing.Shared;
+﻿using ReichertsClassLib;
 using System.Runtime.CompilerServices;
 
 namespace ReichertsMeatDistributing.Client.Pages
