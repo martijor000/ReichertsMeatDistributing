@@ -20,7 +20,7 @@ namespace ReichertsMeatDistributing.Client.Services
 
         public async Task GetProducts()
         {
-            var response = await _httpClient.GetAsync("api/Products");
+            var response = await _httpClient.GetAsync("api/products");
 
             if (response.IsSuccessStatusCode)
             {
@@ -34,7 +34,7 @@ namespace ReichertsMeatDistributing.Client.Services
 
         public async Task GetDeals()
         {
-            var response = await _httpClient.GetAsync("api/Deals");
+            var response = await _httpClient.GetAsync("api/deals");
         
             if (response.IsSuccessStatusCode)
             {
@@ -48,7 +48,7 @@ namespace ReichertsMeatDistributing.Client.Services
 
         public async Task<WeeklyDeal> GetDealById(int id)
         {
-            var response = await _httpClient.GetAsync($"api/Deals/{id}");
+            var response = await _httpClient.GetAsync($"api/deals/{id}");
 
             if (response.IsSuccessStatusCode)
             {
@@ -64,7 +64,7 @@ namespace ReichertsMeatDistributing.Client.Services
 
         public async Task<int> AddDeal(WeeklyDeal deal)
         {
-            var response = await _httpClient.PostAsJsonAsync("api/Deals", deal);
+            var response = await _httpClient.PostAsJsonAsync("api/deals", deal);
 
             if (response.IsSuccessStatusCode)
             {
@@ -79,7 +79,7 @@ namespace ReichertsMeatDistributing.Client.Services
 
         public async Task<int> UpdateDeal(int id, WeeklyDeal deal)
         {
-            var response = await _httpClient.PutAsJsonAsync($"api/Deals/{id}", deal);
+            var response = await _httpClient.PutAsJsonAsync($"api/deals/{id}", deal);
 
             if (response.IsSuccessStatusCode)
             {
@@ -93,7 +93,7 @@ namespace ReichertsMeatDistributing.Client.Services
 
         public async Task<int> DeleteDeal(int id)
         {
-            var response = await _httpClient.DeleteAsync($"api/Deals/{id}");
+            var response = await _httpClient.DeleteAsync($"api/deals/{id}");
 
             if (response.IsSuccessStatusCode)
             {

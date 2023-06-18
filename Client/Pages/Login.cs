@@ -22,7 +22,7 @@ namespace ReichertsMeatDistributing.Client.Pages
             isLoginFailed = false;
 
             // Call the login API endpoint and pass the loginModel
-            var response = await HttpClient.PostAsJsonAsync("api/Admin/login", loginModel);
+            var response = await HttpClient.PostAsJsonAsync("api/admin/login", loginModel);
 
             if (response.IsSuccessStatusCode)
             {

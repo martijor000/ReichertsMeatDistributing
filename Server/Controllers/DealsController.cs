@@ -29,6 +29,11 @@ namespace ReichertsMeatDistributing.Server.Controllers
             {
                 string sqlCommand = "SELECT * FROM WeeklyDeal";
                 var result = await conn.QueryAsync<WeeklyDeal>(sqlCommand);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
                 return Ok(result.ToList());
             }
         }
