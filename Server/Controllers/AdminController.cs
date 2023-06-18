@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
-using ReichertsClassLib;
-
+using ReichertsMeatDistributing.Server.Model;
+using ReichertsMeatDistributing.Shared;
 
 namespace ReichertsMeatDistributing.Server.Controllers
 {

@@ -1,4 +1,10 @@
-﻿namespace ModelLib
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ReichertsMeatDistributing.Shared
 {
     public class Product
     {

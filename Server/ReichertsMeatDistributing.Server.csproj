@@ -20,11 +20,12 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="MySql.Data" Version="8.0.33" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.117" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Client\ReichertsMeatDistributing.Client.csproj" />
-    <ProjectReference Include="..\Test\ReichertsClassLib.csproj" />
+    <ProjectReference Include="..\Shared\ReichertsMeatDistributing.Shared.csproj" />
   </ItemGroup>
 
 

@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ReichertsMeatDistributing.Shared;
 using Dapper;
 using System.Data;
 using MySql.Data.MySqlClient;
-using ReichertsClassLib;
 
 namespace ReichertsMeatDistributing.Server.Controllers
 {

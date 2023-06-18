@@ -1,4 +1,4 @@
-﻿using ReichertsClassLib;
+﻿using ReichertsMeatDistributing.Shared;
 
 namespace ReichertsMeatDistributing.Client.Services
 {
