@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using ReichertsMeatDistributing.Client.Services;
-using ReichertsMeatDistributing.Shared;
+using ReichertsMeatDistributing.Server;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
 var conn = builder.Configuration.GetConnectionString("Default");
 var app = builder.Build();
 

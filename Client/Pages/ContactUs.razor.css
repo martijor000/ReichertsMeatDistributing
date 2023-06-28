@@ -1,13 +1,48 @@
-﻿h1 {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1;
-    color: white;
+﻿.bkg {
+    width: 100%;
+    min-height: 100vh; /* Use min-height instead of height to accommodate varying content heights */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
-div {
-    background-color: black;
-    height: 100vh;
+.container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.card:last-child {
+    margin-bottom: 50px; /* Adjust this value to create space between the last card and the footer */
+}
+
+.card {
+    padding: 4px;
+    margin-bottom: 20px; /* Adjust this value to increase or decrease the spacing between cards */
+}
+
+form {
+    background-color: rgb(#acacac);
+    padding: 20px;
+}
+.vertical-line {
+    border-left: 1px solid black;
+    height: 600px; /* Adjust the height of the line as needed */
+    margin-left: 10px; /* Adjust the margin as needed to position the line */
+}
+
+td:nth-child(2){
+    text-align: right;
+}
+
+th{
+    text-align: center;
+}
+
+@media(max-width: 780px) {
+
+    .vertical-line {
+        display: none;
+    }
 }
