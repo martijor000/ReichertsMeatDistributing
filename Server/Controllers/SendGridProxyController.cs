@@ -30,8 +30,15 @@ namespace ReichertsMeatDistributing.Server.Api
 
                 MailAddress from = new MailAddress(contact.Email, contact.Name);
                 MailAddress to = new MailAddress("reichertsdistributinginc@gmail.com");
-                string subject = "Testing";
-                string body = contact.Message;
+                string subject = "Form Submission";
+                string body = "Client's Info:<br/>" +
+              "<br/>" +
+              "Name: " + contact.Name + "<br/>" +
+              "Email: " + contact.Email + "<br/>" +
+              "Phone Number: " + contact.PhoneNumber + "<br/>" +
+              "<br/>" +
+              "Message: " + "<br/>" +
+              contact.Message;
 
                 SendEmail(subject, from, to, body, email, displayName, password, host, port);
 
@@ -47,20 +54,22 @@ namespace ReichertsMeatDistributing.Server.Api
         protected void SendEmail(string subject, MailAddress from, MailAddress to, string body,
             string email, string displayName, string password, string host, int port)
         {
-            using (SmtpClient mailClient = new SmtpClient(host, port))
+            using (MailMessage msgMail = new MailMessage(from, to))
             {
-                mailClient.UseDefaultCredentials = false;
-                mailClient.Credentials = new System.Net.NetworkCredential(email, password);
-                mailClient.EnableSsl = true;
+                msgMail.Subject = from.DisplayName + " " + subject;
+                msgMail.Body = body;
+                msgMail.IsBodyHtml = true;
+                msgMail.From = from;
+                msgMail.ReplyToList.Add(from);
 
-                using (MailMessage msgMail = new MailMessage(from, to))
+
+                using (SmtpClient mailClient = new SmtpClient(host, port))
                 {
-                    msgMail.Subject = subject;
-                    msgMail.Body = body;
-                    msgMail.IsBodyHtml = true;
-                    msgMail.From = new MailAddress(email, displayName);
-
+                    mailClient.UseDefaultCredentials = false;
+                    mailClient.Credentials = new System.Net.NetworkCredential(email, password);
+                    mailClient.EnableSsl = true;
                     mailClient.Send(msgMail);
+
                 }
             }
         }

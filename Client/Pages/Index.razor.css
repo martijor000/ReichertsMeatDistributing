@@ -52,7 +52,9 @@ h1 span {
     z-index: 1;
     background-color: none;
 }
-
+.container{
+    padding-bottom: 50px;
+}
 .imgContainer .card-body, .imgContainer .card{
     background-color: transparent;
     color: white;
@@ -62,7 +64,7 @@ h1 span {
     align-self: center;
 }
 
-.text-center{
+.text-center {
     padding: 5%;
 }
 
@@ -70,6 +72,36 @@ h1 span {
     float: right;
 }
 
+td:nth-child(2) {
+    text-align: right;
+}
+
+th {
+    text-align: center;
+    font-size: 20px;
+}
+
+td{
+    font-size: 20px;
+}
+
+h3 {
+    font-size: 30px;
+}
+
+.container:last-child{
+    padding-top: 30px;
+}
+
+#bkg{
+    background-color: #524C51;
+    width: 100%;
+    color: white;
+}
+
+#bkg a {
+    color: deepskyblue;
+}
 @media(max-width: 780px){
 
     .imgContainer .container{

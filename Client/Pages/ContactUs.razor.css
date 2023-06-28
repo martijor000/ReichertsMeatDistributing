@@ -46,3 +46,10 @@ th{
         display: none;
     }
 }
+
+/* Custom styles for validation messages */
+.validation-message {
+    font-size: 14px; /* Set the desired font size */
+    color: red; /* Set the desired text color */
+    /* Add any additional styling as needed */
+}
