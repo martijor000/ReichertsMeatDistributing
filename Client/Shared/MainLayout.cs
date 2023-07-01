@@ -12,5 +12,10 @@ namespace ReichertsMeatDistributing.Client.Shared
             IsMenuOpen = !IsMenuOpen;
         }
 
+        private void CloseMenu()
+        {
+            IsMenuOpen = false;
+        }
+
     }
 }

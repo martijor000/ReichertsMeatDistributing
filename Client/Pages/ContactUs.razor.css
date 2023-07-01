@@ -12,44 +12,20 @@
     flex-direction: column;
     justify-content: center;
 }
-
-.card:last-child {
-    margin-bottom: 50px; /* Adjust this value to create space between the last card and the footer */
+.form-container {
+    width: 100%;
+    height: 100vh; /* Set the height to the full viewport height */
+    overflow: hidden; /* Prevent scrolling */
+}
+/* Style the embedded Google Form */
+.embedded-form {
+    width: 100%;
+    height: 100%;
 }
 
-.card {
-    padding: 4px;
-    margin-bottom: 20px; /* Adjust this value to increase or decrease the spacing between cards */
-}
-
-form {
-    background-color: rgb(#acacac);
+p, h2{
+    margin-bottom: 20px;
     padding: 20px;
 }
-.vertical-line {
-    border-left: 1px solid black;
-    height: 600px; /* Adjust the height of the line as needed */
-    margin-left: 10px; /* Adjust the margin as needed to position the line */
-}
 
-td:nth-child(2){
-    text-align: right;
-}
 
-th{
-    text-align: center;
-}
-
-@media(max-width: 780px) {
-
-    .vertical-line {
-        display: none;
-    }
-}
-
-/* Custom styles for validation messages */
-.validation-message {
-    font-size: 14px; /* Set the desired font size */
-    color: red; /* Set the desired text color */
-    /* Add any additional styling as needed */
-}
