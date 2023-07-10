@@ -9,7 +9,7 @@
 
 //        private readonly HttpClient _httpClient;
 //        public List<WeeklyDeal> deals { get; set; } = new List<WeeklyDeal>();
-//        public List<Product> products { get; set; } = new List<Product>();
+//        public List<ProductItem> products { get; set; } = new List<ProductItem>();
 //        public HttpClient? HttpClient { get; }
 
 
@@ -18,13 +18,13 @@
 //            _httpClient = httpClient;
 //        }
 
-//        public async Task GetProducts()
+//        public async Task GetAllProducts()
 //        {
 //            var response = await _httpClient.GetAsync("api/products");
 
 //            if (response.IsSuccessStatusCode)
 //            {
-//                products = await response.Content.ReadFromJsonAsync<List<Product>>();
+//                products = await response.Content.ReadFromJsonAsync<List<ProductItem>>();
 //            }
 //            else
 //            {

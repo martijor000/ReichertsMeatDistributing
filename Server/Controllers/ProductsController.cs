@@ -15,7 +15,7 @@
 //        private readonly IConfiguration _config;
 //        public string connectionId = "Default";
 //        public string sqlCommand = "";
-//        IEnumerable<Product>? _products;
+//        IEnumerable<ProductItem>? _products;
 
 //        public ProductsController(IConfiguration config)
 //        {
@@ -24,12 +24,12 @@
 
 //        // GET api/deals
 //        [HttpGet]
-//        public async Task<ActionResult<List<Product>>> Get()
+//        public async Task<ActionResult<List<ProductItem>>> Get()
 //        {
 //            using IDbConnection conn = new MySqlConnection(_config.GetConnectionString(connectionId));
 //            {
-//                string sqlCommand = "SELECT * FROM Product";
-//                var result = await conn.QueryAsync<Product>(sqlCommand);
+//                string sqlCommand = "SELECT * FROM ProductItem";
+//                var result = await conn.QueryAsync<ProductItem>(sqlCommand);
 //                return Ok(result.ToList());
 //            }
 //        }
