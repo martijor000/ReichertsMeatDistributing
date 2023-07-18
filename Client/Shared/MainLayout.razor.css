@@ -73,9 +73,7 @@ nav {
 
 }
 
-main {
-    min-height: 100vh;
-}
+
 
 @media (min-width: 992px) {
     

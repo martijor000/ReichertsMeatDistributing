@@ -10,14 +10,15 @@ namespace ReichertsMeatDistributing.Shared
     {
         public List<ProductItem> GetAllProducts()
         {
-            var products = new List<ProductItem>
-            {
-
-            };
+            var products = new List<ProductItem>();
+            products.AddRange(GetBarProducts());
+            products.AddRange(GetRestaurantsProducts());
+            products.AddRange(GetBurger_BarsProducts());
+            products.AddRange(GetCoffee_ShopsProducts());
+            products.AddRange(GetConvenience_StoresProducts());
 
             return products;
         }
-
 
         public List<ProductItem> GetBarProducts()
         {
