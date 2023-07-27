@@ -4,26 +4,28 @@
 <div class="con">
     <div class="row">
         <div class="col-md-2">
-            <h3>Filters</h3>
-            <div class="form-group">
-                <select class="form-control" @bind="@PageSize" @oninput="OnPageSizeChange">
-                    <option value="10">10 products</option>
-                    <option value="20">20 products</option>
-                    <option value="50">50 products</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <input type="text" class="form-control" @bind="@Search" @oninput="UpdateSearch" placeholder="Search by name" />
-            </div>
-            <div class="form-group">
-                <select class="form-control" @bind="@SelectedCategory" @onclick="SelectedCat" title="Business Category">
-                    <option value="@BusinessCategory.All">All</option>
-                    <option value="@BusinessCategory.Bars">Bars</option>
-                    <option value="@BusinessCategory.Restaurants">Restaurants</option>
-                    <option value="@BusinessCategory.BurgerBars">Burger Bars</option>
-                    <option value="@BusinessCategory.CoffeeShops">Coffee Shops</option>
-                    <option value="@BusinessCategory.ConvenienceStores">Convenience Stores</option>
-                </select>
+            <div class="bkgcolor"
+                <h3>Filters</h3>
+                <div class="form-group">
+                    <select class="form-control" @bind="@PageSize" @oninput="OnPageSizeChange">
+                        <option value="10">10 products</option>
+                        <option value="20">20 products</option>
+                        <option value="50">50 products</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" @bind="@Search" @oninput="UpdateSearch" placeholder="Search by name" />
+                </div>
+                <div class="form-group">
+                    <select class="form-control" @bind="@SelectedCategory" @onclick="SelectedCat" title="Business Category">
+                        <option value="@BusinessCategory.All">All</option>
+                        <option value="@BusinessCategory.Bars">Bars</option>
+                        <option value="@BusinessCategory.Restaurants">Restaurants</option>
+                        <option value="@BusinessCategory.BurgerBars">Burger Bars</option>
+                        <option value="@BusinessCategory.CoffeeShops">Coffee Shops</option>
+                        <option value="@BusinessCategory.ConvenienceStores">Convenience Stores</option>
+                    </select>
+                </div>
             </div>
         </div>
 

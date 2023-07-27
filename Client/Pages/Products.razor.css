@@ -1,13 +1,17 @@
-﻿.card{
-    border: none;
-} 
-.con{
+﻿/* Your existing CSS remains the same */
+
+.con {
     overflow: hidden;
 }
 
-.col-md-2 {
+.bkgcolor {
     text-align: center;
     color: white;
+    height: 100%;
+    padding: 10px;
+}
+
+.col-md-2 {
     background-color: darkolivegreen;
 }
 
@@ -16,7 +20,7 @@
     justify-content: center;
 }
 
-button{
+button {
     border: none;
     margin: 10px;
     background-color: grey;
@@ -24,15 +28,18 @@ button{
     font-size: 20px;
 }
 
-h3{
-    font-size: 40px;
-    margin: 20px;
+h3 {
+    font-size: 30px;
+    padding: 20px;
 }
 
-.col-md-10 h3{
+.col-md-10 h3 {
     text-align: center;
 }
 
+.bkgcolor h3 {
+    margin: 0; /* Set margin to zero to remove any default margin */
+}
 
 .form-group {
     width: 100%;
@@ -41,30 +48,50 @@ h3{
 .row {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
 }
 
+    .row .row {
+        margin-left: 25%;
+        margin-right: 25%;
+    }
+
 .col-md-4 {
-    flex: 0 0 100%;
-    box-sizing: border-box;
+    margin-bottom: 24px; /* Add margin at the bottom of each product card */
 }
 
 .card {
     border: 2px solid black;
-    margin-bottom: 10px;
     padding: 10px;
     display: flex;
     flex-direction: column;
     height: 100%;
-    box-sizing: border-box; /* Add this line */
+    box-sizing: border-box;
 }
 
 .card-body {
     flex: 1;
 }
 
-@media (min-width: 768px) {
-    .col-md-4 {
-        flex: 0 0 33.33333%;
+
+@media (max-width: 1400px) {
+    .row .row {
+        margin-left: 15%;
+        margin-right: 15%;
+    }
+
+}
+@media (max-width: 1000px) {
+    .row .row {
+        margin-left: 5%;
+        margin-right: 5%;
     }
 }
+
+form-group {
+    margin-bottom: 10px; /* Add some margin at the bottom of each form group */
+}
+
+.form-control {
+    margin-bottom: 5px; /* Add some margin at the bottom of each form control */
+}
+
