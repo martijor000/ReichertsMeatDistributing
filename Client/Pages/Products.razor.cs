@@ -8,6 +8,8 @@ namespace ReichertsMeatDistributing.Client.Pages
 {
     partial class Products
     {
+        [Inject]
+        private NavigationManager NavigationManager { get; set; }
         public List<ProductItem> ProductItems { get; set; } 
         public List<ProductItem> DisplayedProductItems { get; set; }
         public BusinessCategory SelectedCategory { get; set; } 
@@ -20,6 +22,19 @@ namespace ReichertsMeatDistributing.Client.Pages
         protected override void OnInitialized()
         {
             ProductItems = ProductRepo.GetAllProducts();
+
+            // Check if there is a query parameter for the category
+            var categoryQueryString = NavigationManager.Uri.Split('?').LastOrDefault();
+            if (!string.IsNullOrEmpty(categoryQueryString))
+            {
+                var categoryParam = categoryQueryString.Split('=').LastOrDefault();
+                if (Enum.TryParse(categoryParam, out BusinessCategory selectedCategory))
+                {
+                    SelectedCategory = selectedCategory;
+                    SelectedCat();
+                }
+            }
+
             ApplyFilters();
         }
 

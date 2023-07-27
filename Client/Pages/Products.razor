@@ -30,17 +30,15 @@
         </div>
 
         <div class="col-md-10">
-            <h3>Products</h3>
-
             <div class="row">
                 @foreach (var item in DisplayedProductItems)
                 {
                     <div class="col-md-4">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">@item.ItemDescription</h5>
-                                <p class="card-text">Item ID: <br>@item.ItemID</p>
-                                <p class="card-text">Stocking UM: <br>@item.StockingUM</p>
+                                <h5 class="card-title font-largest">@item.ItemDescription</h5>
+                                <p class="card-text font-smaller">Item ID: <br>@item.ItemID</p>
+                                <p class="card-text font-smaller-italic">Stocking UM: <br>@item.StockingUM</p>
                             </div>
                         </div>
                     </div>

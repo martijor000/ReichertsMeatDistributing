@@ -42,6 +42,11 @@ h1 span {
     padding: 5%;
 }
 
+.col-md-4 a{
+    text-decoration: none;
+    color: black;
+}
+
 
 
 .imgContainer .container {
