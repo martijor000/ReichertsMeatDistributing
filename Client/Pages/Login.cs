@@ -1,39 +1,39 @@
-﻿//using Microsoft.AspNetCore.Components;
-//using ReichertsMeatDistributing.Shared;
-//using System.Net.Http;
-//using System.Net.Http.Json;
-//using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Components;
+using ReichertsMeatDistributing.Shared;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
 
-//namespace ReichertsMeatDistributing.Client.Pages
-//{
-//    public partial class Login
-//    {
-//        private LoginModel loginModel = new LoginModel();
-//        private bool isLoginFailed = false;
+namespace ReichertsMeatDistributing.Client.Pages
+{
+    public partial class Login
+    {
+        private LoginModel loginModel = new LoginModel();
+        private bool isLoginFailed = false;
 
-//        [Inject]
-//        private HttpClient HttpClient { get; set; }
+        [Inject]
+        private HttpClient HttpClient { get; set; }
 
-//        [Inject]
-//        private NavigationManager NavigationManager { get; set; }
+        [Inject]
+        private NavigationManager NavigationManager { get; set; }
 
-//        private async Task SubmitLoginForm()
-//        {
-//            isLoginFailed = false;
+        private async Task SubmitLoginForm()
+        {
+            isLoginFailed = false;
 
-//            // Call the login API endpoint and pass the loginModel
-//            var response = await HttpClient.PostAsJsonAsync("api/admin/login", loginModel);
+            // Call the login API endpoint and pass the loginModel
+            var response = await HttpClient.PostAsJsonAsync("api/admin/login", loginModel);
 
-//            if (response.IsSuccessStatusCode)
-//            {
-//                AuthStateProvider.MarkUserAsAuthenticated("admin");
-//                NavigationManager.NavigateTo("/admin/deals");
-//            }
-//            else
-//            {
-//                // Failed login
-//                isLoginFailed = true;
-//            }
-//        }
-//    }
-//}
+            if (response.IsSuccessStatusCode)
+            {
+                AuthStateProvider.MarkUserAsAuthenticated("admin");
+                NavigationManager.NavigateTo("/admin/deals");
+            }
+            else
+            {
+                // Failed login
+                isLoginFailed = true;
+            }
+        }
+    }
+}

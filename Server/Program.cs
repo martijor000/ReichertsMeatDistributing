@@ -1,14 +1,16 @@
-using Microsoft.EntityFrameworkCore;
+using ReichertsMeatDistributing.Client.Services;
 using ReichertsMeatDistributing.Server;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
+builder.Services.AddScoped<IDealService, DealService>();
+builder.Services.AddHttpClient();
 var conn = builder.Configuration.GetConnectionString("Default");
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -24,12 +26,9 @@ else
 }
 
 app.UseHttpsRedirection();
-
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
-
 app.UseRouting();
-
 
 app.MapRazorPages();
 app.MapControllers();
