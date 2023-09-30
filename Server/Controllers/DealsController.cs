@@ -10,14 +10,14 @@ namespace ReichertsMeatDistributing.Server.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
-    public class DealsController : ControllerBase
+    public class dealsController : ControllerBase
     {
         private readonly IConfiguration _config;
         public string connectionId = "Default";
         public string sqlCommand = "";
         IEnumerable<WeeklyDeal>? _deals;
 
-        public DealsController(IConfiguration config)
+        public dealsController(IConfiguration config)
         {
             _config = config;
         }
