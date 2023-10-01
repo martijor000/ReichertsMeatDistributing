@@ -31,23 +31,48 @@ h1 span {
     border-radius: 0;
 }
 
-.position-absolute{
-    height: 100%;
+    .col-md-6:nth-child(2) {
+        background-color: darkolivegreen;
+        text-align: center;
+        border-radius: 50%;
+        padding: 5%;
+        word-wrap: normal;
+        overflow: hidden;
+
+    }
+
+    .col-md-6:nth-child(2) h1, .col-md-6:nth-child(2) h3 {
+        text-shadow: 2px 2px 2px black;
+        font-size: xx-large
+    }
+
+    .col-md-6:nth-child(2) h2 {
+        font-weight: bold;
+        color: white;
+    }
+
+
+    .col-md-6 .col-md-2{
+        align-self: center;
+    }
+
+    .col-md-4 a {
+        text-decoration: none;
+        color: black;
+    }
+
+    .btn{
+        font-size: 30px;
+        color: white;
+    }
+
+@media (max-width: 767px) {
+    .col-md-6:nth-child(1) {
+        margin-top: 150px; /* Add some space at the bottom */
+        padding: 30px;
+        word-wrap: normal;
+    }
 }
-
-
-.col-md-4.position-relative {
-    background-color: darkolivegreen;
-    text-align: center;
-    padding: 5%;
-}
-
-.col-md-4 a{
-    text-decoration: none;
-    color: black;
-}
-
-
 
 .imgContainer .container {
     position: absolute;

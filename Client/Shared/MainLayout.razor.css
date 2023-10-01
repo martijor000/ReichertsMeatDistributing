@@ -130,3 +130,9 @@ footer {
         text-align: center;
     }
 }
+
+footer .navlinks .row:last-child{
+   color: darkolivegreen;
+   padding-top: 100px;
+    
+}
