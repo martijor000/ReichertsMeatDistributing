@@ -28,7 +28,7 @@ namespace ReichertsMeatDistributing.Server.Controllers
         {
             using IDbConnection conn = new MySqlConnection(_config.GetConnectionString(connectionId));
             {
-                string sqlCommand = "SELECT * FROM WeeklyDeal";
+                string sqlCommand = "SELECT * FROM WeeklyDeal WHERE IsDeleted = 0";
                 var result = await conn.QueryAsync<WeeklyDeal>(sqlCommand);
 
                 if (result == null)
@@ -95,10 +95,10 @@ namespace ReichertsMeatDistributing.Server.Controllers
         {
             using IDbConnection conn = new MySqlConnection(_config.GetConnectionString(connectionId));
             {
-                string sqlCommand = "DELETE FROM WeeklyDeal WHERE Id=@Id";
-                var rowsDeleted = await conn.ExecuteAsync(sqlCommand, new { Id = id });
+                string sqlCommand = "UPDATE WeeklyDeal SET IsDeleted = 1 WHERE Id=@Id";
+                var rowsUpdated = await conn.ExecuteAsync(sqlCommand, new { Id = id });
 
-                if (rowsDeleted == 0)
+                if (rowsUpdated == 0)
                 {
                     return NotFound();
                 }
@@ -106,5 +106,6 @@ namespace ReichertsMeatDistributing.Server.Controllers
                 return NoContent();
             }
         }
+
     }
 }
