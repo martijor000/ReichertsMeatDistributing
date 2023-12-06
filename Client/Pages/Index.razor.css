@@ -6,7 +6,9 @@
     color: white;
     background-image: url('Pictures/Reicherts.jpg');
 }
-
+.col-md-8{
+    padding: 30px;
+}
 .imgContainer .row:last-child .col-md-4:last-child {
     overflow-y: auto;
     word-wrap: break-word;

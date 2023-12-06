@@ -5,7 +5,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark px-8 position-static">
     <a class="navbar-brand" href=""><h1>Reicherts Distributing</h1></a>
-    <button @onclick="ToggleMenu" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+    <button @onclick="ToggleMenu" class="navbar-toggler" type="button" data-toggle="collapse" data-target=".sidebar">
         <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -19,9 +19,6 @@
                 <li class="nav-item">
                     <a class="nav-link active" href="/Products" @onclick="CloseMenu">Products</a>
                 </li>
-@*                 <li class="nav-item">
-                    <a class="nav-link active" href="/About" @onclick="CloseMenu">About</a>
-                </li> *@
                 <li class="nav-item">
                     <a class="nav-link active" href="/ContactUs" @onclick="CloseMenu">Contact Us</a>
                 </li>
@@ -47,9 +44,6 @@
                         <button class="dropdown-item" @onclick="() => SelectCategory(BusinessCategory.ConvenienceStores)">Convenience Stores</button>
                     </div>
                 </li>
-@*                 <li class="nav-item">
-                    <a class="nav-link active" href="/About">About</a>
-                </li> *@
                 <li class="nav-item">
                     <a class="nav-link active" href="/ContactUs">Contact Us</a>
                 </li>

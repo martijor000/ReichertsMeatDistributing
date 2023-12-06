@@ -78,7 +78,7 @@ nav {
 }
 
 
-
+/*
 @media (min-width: 992px) {
     
 
@@ -90,7 +90,14 @@ nav {
         display : none
     }
 
+}*/
+
+@media (max-width: 991px) {
+    .sidebar {
+        display: block !important;
+    }
 }
+
 
 footer {
     color:white;
@@ -120,15 +127,6 @@ footer {
 
 .container:not(.socialBar){
     background-color: black;
-}
-
-
-@media (max-width: 576px) {
-    .navbar-brand h1{
-        font-size: 20px;
-        padding-left: 20px;
-        text-align: center;
-    }
 }
 
 footer .navlinks .row:last-child{
