@@ -45,7 +45,7 @@ namespace ReichertsMeatDistributing.Server.Controllers
         {
             using IDbConnection conn = new MySqlConnection(_config.GetConnectionString(connectionId));
             {
-                string sqlCommand = "SELECT * FROM WeeklyDeal WHERE Id=@Id";
+                string sqlCommand = "SELECT * FROM WeeklyDeal WHERE Id=@Id AND IsDeleted = 0";
                 var result = await conn.QuerySingleOrDefaultAsync<WeeklyDeal>(sqlCommand, new { Id = id });
 
                 if (result == null)
@@ -62,7 +62,8 @@ namespace ReichertsMeatDistributing.Server.Controllers
         {
             using IDbConnection conn = new MySqlConnection(_config.GetConnectionString(connectionId));
             {
-                string sqlCommand = "INSERT INTO WeeklyDeal (Name, Description, Price) VALUES (@Name, @Description, @Price); SELECT LAST_INSERT_ID()";
+                // Add IsDeleted to the INSERT statement with a default value of 0
+                string sqlCommand = "INSERT INTO WeeklyDeal (Name, Description, Price, IsDeleted) VALUES (@Name, @Description, @Price, 0); SELECT LAST_INSERT_ID()";
                 var newId = await conn.ExecuteScalarAsync<int>(sqlCommand, deal);
 
                 deal.Id = newId; // Set the ID of the deal object to the newly generated ID
@@ -70,6 +71,7 @@ namespace ReichertsMeatDistributing.Server.Controllers
                 return CreatedAtAction(nameof(GetById), new { id = newId }, deal);
             }
         }
+
 
         // PUT api/deals/1
         [HttpPut("{id}")]

@@ -17,26 +17,7 @@ namespace ReichertsMeatDistributing.Client.Pages
         public int CurrentPageSize { get; set; } = 10;
         public bool ShowLoadMoreButton { get; set; } = true;
         public string Search { get; set; } = "";
-        private ProductRepository ProductRepo = new ProductRepository();
 
-        protected override void OnInitialized()
-        {
-            ProductItems = ProductRepo.GetAllProducts();
-
-            // Check if there is a query parameter for the category
-            var categoryQueryString = NavigationManager.Uri.Split('?').LastOrDefault();
-            if (!string.IsNullOrEmpty(categoryQueryString))
-            {
-                var categoryParam = categoryQueryString.Split('=').LastOrDefault();
-                if (Enum.TryParse(categoryParam, out BusinessCategory selectedCategory))
-                {
-                    SelectedCategory = selectedCategory;
-                    SelectedCat();
-                }
-            }
-
-            ApplyFilters();
-        }
 
         private void ApplyFilters()
         {
@@ -65,36 +46,36 @@ namespace ReichertsMeatDistributing.Client.Pages
             UpdateLoadMoreButtonVisibility();
         }
 
-        private void SelectedCat()
-        {
-            switch (SelectedCategory)
-            {
-                case BusinessCategory.All:
-                    ProductItems = ProductRepo.GetAllProducts();
-                    ApplyFilters();
-                    break;
-                case BusinessCategory.Bars:
-                    ProductItems = ProductRepo.GetBarProducts();
-                    ApplyFilters();
-                    break;
-                case BusinessCategory.Restaurants:
-                    ProductItems = ProductRepo.GetRestaurantsProducts();
-                    ApplyFilters();
-                    break;
-                case BusinessCategory.BurgerBars:
-                    ProductItems = ProductRepo.GetBurger_BarsProducts();
-                    ApplyFilters();
-                    break;
-                case BusinessCategory.CoffeeShops:
-                    ProductItems = ProductRepo.GetCoffee_ShopsProducts();
-                    ApplyFilters();
-                    break;
-                case BusinessCategory.ConvenienceStores:
-                    ProductItems = ProductRepo.GetConvenience_StoresProducts();
-                    ApplyFilters();
-                    break;
-            }
-        }
+        //private void SelectedCat()
+        //{
+        //    switch (SelectedCategory)
+        //    {
+        //        case BusinessCategory.All:
+        //            ProductItems = ProductRepo.GetAllProducts();
+        //            ApplyFilters();
+        //            break;
+        //        case BusinessCategory.Bars:
+        //            ProductItems = ProductRepo.GetBarProducts();
+        //            ApplyFilters();
+        //            break;
+        //        case BusinessCategory.Restaurants:
+        //            ProductItems = ProductRepo.GetRestaurantsProducts();
+        //            ApplyFilters();
+        //            break;
+        //        case BusinessCategory.BurgerBars:
+        //            ProductItems = ProductRepo.GetBurger_BarsProducts();
+        //            ApplyFilters();
+        //            break;
+        //        case BusinessCategory.CoffeeShops:
+        //            ProductItems = ProductRepo.GetCoffee_ShopsProducts();
+        //            ApplyFilters();
+        //            break;
+        //        case BusinessCategory.ConvenienceStores:
+        //            ProductItems = ProductRepo.GetConvenience_StoresProducts();
+        //            ApplyFilters();
+        //            break;
+        //    }
+        //}
 
         private void UpdateDisplayedItems()
         {

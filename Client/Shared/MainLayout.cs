@@ -21,14 +21,14 @@ namespace ReichertsMeatDistributing.Client.Shared
             IsMenuOpen = false;
         }
 
-        private BusinessCategory SelectedCategory { get; set; } = BusinessCategory.All;
+        //private BusinessCategory SelectedCategory { get; set; } = BusinessCategory.All;
 
 
-        private void SelectCategory(BusinessCategory category)
-        {
-            SelectedCategory = category;
-            NavigationManager.NavigateTo($"/Products?category={category}", forceLoad: true);
-        }
+        //private void SelectCategory(BusinessCategory category)
+        //{
+        //    SelectedCategory = category;
+        //    NavigationManager.NavigateTo($"/Products?category={category}", forceLoad: true);
+        //}
 
     }
 }

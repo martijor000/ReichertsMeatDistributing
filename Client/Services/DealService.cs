@@ -9,27 +9,12 @@ namespace ReichertsMeatDistributing.Client.Services
 
         private readonly HttpClient _httpClient;
         public List<WeeklyDeal> deals { get; set; } = new List<WeeklyDeal>();
-        public List<ProductItem> products { get; set; } = new List<ProductItem>();
         public HttpClient? HttpClient { get; }
 
 
         public DealService(HttpClient httpClient)
         {
             _httpClient = httpClient;
-        }
-
-        public async Task GetAllProducts()
-        {
-            var response = await _httpClient.GetAsync("api/products");
-
-            if (response.IsSuccessStatusCode)
-            {
-                products = await response.Content.ReadFromJsonAsync<List<ProductItem>>();
-            }
-            else
-            {
-                // handle error
-            }
         }
 
         public async Task GetDeals()

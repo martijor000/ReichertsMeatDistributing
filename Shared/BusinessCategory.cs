@@ -6,13 +6,15 @@ using System.Threading.Tasks;
 
 namespace ReichertsMeatDistributing.Shared
 {
-    public enum BusinessCategory
+    public class BusinessCategory
     {
-        All = 0,
-        Bars = 1,
-        Restaurants = 2,
-        BurgerBars = 3,
-        CoffeeShops = 4,
-        ConvenienceStores = 5
+        public BusinessCategory(int id, string type)
+        {
+            Id = id;
+            Type = type;
+        }
+
+        public int Id { get; set; }
+        public string Type { get; set; }
     }
 }
