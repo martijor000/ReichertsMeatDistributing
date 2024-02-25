@@ -1,9 +1,8 @@
 using ReichertsMeatDistributing.Client.Services;
 using ReichertsMeatDistributing.Server;
-using Microsoft.Extensions.DependencyInjection;
 using System.Collections;
-using System.Net.Http;
-using System.Security.Cryptography.X509Certificates;
+using ReichertsMeatDistributing.Server.Data;
+using Microsoft.EntityFrameworkCore;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +12,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
 builder.Services.AddScoped<IDealService, DealService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 // Configure HttpClient with custom certificate validation
 builder.Services.AddHttpClient<CustomHttpClient>(client =>
 {
@@ -36,8 +36,12 @@ builder.Services.AddHttpClient<CustomHttpClient>(client =>
     return handler;
 });
 
-
+var SqliteConnection = builder.Configuration.GetConnectionString("Sqlite");
 var conn = builder.Configuration.GetConnectionString("Default");
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite(SqliteConnection));
+
 
 var app = builder.Build();
 

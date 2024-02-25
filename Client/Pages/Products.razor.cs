@@ -1,106 +1,103 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.WebUtilities;
+using ReichertsMeatDistributing.Client.Services;
 using ReichertsMeatDistributing.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ReichertsMeatDistributing.Client.Pages
 {
     partial class Products
     {
+        private List<ProductItem> DisplayedProductItems { get; set; } = new List<ProductItem>();
+        private List<BusinessCategories> Categories { get; set; } = new List<BusinessCategories>(); 
+        private BusinessCategories SelectedCategory { get; set; } = null; 
+        private int PageSize { get; set; } = 10;
+        private int CurrentPageSize { get; set; } = 10;
+        private bool ShowLoadMoreButton { get; set; } = true;
+        private string Search { get; set; } = "";
+
         [Inject]
-        private NavigationManager NavigationManager { get; set; }
-        public List<ProductItem> ProductItems { get; set; } 
-        public List<ProductItem> DisplayedProductItems { get; set; }
-        public BusinessCategory SelectedCategory { get; set; } 
-        public int PageSize { get; set; } = 10;
-        public int CurrentPageSize { get; set; } = 10;
-        public bool ShowLoadMoreButton { get; set; } = true;
-        public string Search { get; set; } = "";
-        private ProductRepository ProductRepo = new ProductRepository();
+        private ProductService ProductService { get; set; }
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
-            ProductItems = ProductRepo.GetAllProducts();
+            // Load products and categories
+            await LoadProducts();
+            await LoadCategories();
 
-            // Check if there is a query parameter for the category
-            var categoryQueryString = NavigationManager.Uri.Split('?').LastOrDefault();
-            if (!string.IsNullOrEmpty(categoryQueryString))
-            {
-                var categoryParam = categoryQueryString.Split('=').LastOrDefault();
-                if (Enum.TryParse(categoryParam, out BusinessCategory selectedCategory))
-                {
-                    SelectedCategory = selectedCategory;
-                    SelectedCat();
-                }
-            }
+            // Read the category query parameter from the URL
+            //var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+            //var queryParams = QueryHelpers.ParseQuery(uri.Query);
+            //if (queryParams.TryGetValue("category", out var category))
+            //{
+            //    SelectedCategory = category;
+            //}
+            //else
+            //{
+            //    SelectedCategory = null;
+            //}
+        }
 
+
+        private async Task LoadProducts()
+        {
+            await ProductService.LoadAllProducts();
+            DisplayedProductItems = ProductService.Products;
             ApplyFilters();
+        }
+
+        private async Task LoadCategories()
+        {
+            await ProductService.LoadAllCategories();
+            Categories = ProductService.Categories;
         }
 
         private void ApplyFilters()
         {
-            DisplayedProductItems = ProductItems;
+            var filteredItems = DisplayedProductItems.ToList();
 
             if (!string.IsNullOrEmpty(Search))
             {
-                DisplayedProductItems = DisplayedProductItems
+                filteredItems = filteredItems
                     .Where(item => item.ItemDescription.Contains(Search, StringComparison.OrdinalIgnoreCase) ||
                                     item.ItemID.Contains(Search, StringComparison.OrdinalIgnoreCase))
                     .ToList();
-                UpdateLoadMoreButtonVisibility();
+            }
 
-            }
-            else
+            if (SelectedCategory != null) // Check if a category is selected
             {
-                UpdateLoadMoreButtonVisibility();
-                UpdateDisplayedItems();
+                if (SelectedCategory.Category != "All")
+                {
+                    filteredItems = filteredItems
+                        .Where(item => item.BusinessCategory == SelectedCategory)
+                        .ToList();
+                }
             }
+
+            UpdateLoadMoreButtonVisibility(filteredItems);
+            UpdateDisplayedItems(filteredItems);
         }
 
         public void LoadMore()
         {
             CurrentPageSize += PageSize;
-            UpdateDisplayedItems();
-            UpdateLoadMoreButtonVisibility();
+            ApplyFilters();
         }
 
-        private void SelectedCat()
+        private void SelectedCat(ChangeEventArgs e)
         {
-            switch (SelectedCategory)
-            {
-                case BusinessCategory.All:
-                    ProductItems = ProductRepo.GetAllProducts();
-                    ApplyFilters();
-                    break;
-                case BusinessCategory.Bars:
-                    ProductItems = ProductRepo.GetBarProducts();
-                    ApplyFilters();
-                    break;
-                case BusinessCategory.Restaurants:
-                    ProductItems = ProductRepo.GetRestaurantsProducts();
-                    ApplyFilters();
-                    break;
-                case BusinessCategory.BurgerBars:
-                    ProductItems = ProductRepo.GetBurger_BarsProducts();
-                    ApplyFilters();
-                    break;
-                case BusinessCategory.CoffeeShops:
-                    ProductItems = ProductRepo.GetCoffee_ShopsProducts();
-                    ApplyFilters();
-                    break;
-                case BusinessCategory.ConvenienceStores:
-                    ProductItems = ProductRepo.GetConvenience_StoresProducts();
-                    ApplyFilters();
-                    break;
-            }
+            // Parse selected category dynamically
+            var categoryName = e.Value.ToString();
+            SelectedCategory = Categories.FirstOrDefault(c => c.Category == categoryName);
+            ApplyFilters();
         }
 
-        private void UpdateDisplayedItems()
+        private void UpdateDisplayedItems(List<ProductItem> items)
         {
-            DisplayedProductItems = ProductItems
-                .Take(CurrentPageSize)
-                .ToList();
+            DisplayedProductItems = items.Take(CurrentPageSize).ToList();
         }
 
         private void UpdateSearch(ChangeEventArgs e)
@@ -109,7 +106,7 @@ namespace ReichertsMeatDistributing.Client.Pages
             ApplyFilters();
         }
 
-        public void OnPageSizeChange(ChangeEventArgs e)
+        private void OnPageSizeChange(ChangeEventArgs e)
         {
             if (int.TryParse(e.Value.ToString(), out int size))
             {
@@ -119,16 +116,9 @@ namespace ReichertsMeatDistributing.Client.Pages
             }
         }
 
-        private void UpdateLoadMoreButtonVisibility()
+        private void UpdateLoadMoreButtonVisibility(List<ProductItem> items)
         {
-            if (string.IsNullOrEmpty(Search))
-            {
-                ShowLoadMoreButton = CurrentPageSize < ProductItems.Count;
-            }
-            else
-            {
-                ShowLoadMoreButton = false;
-            }
+            ShowLoadMoreButton = CurrentPageSize < items.Count;
         }
     }
 }

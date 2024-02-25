@@ -1,10 +1,11 @@
 ﻿@page "/Products"
-@using ReichertsMeatDistributing.Shared;
+@using ReichertsMeatDistributing.Shared
+@using System.Net.Http.Json
 
 <div class="con">
     <div class="row">
         <div class="col-md-2">
-            <div class="bkgcolor"
+            <div class="bkgcolor">
                 <h3>Filters</h3>
                 <div class="form-group">
                     <select class="form-control" @bind="@PageSize" @oninput="OnPageSizeChange">
@@ -17,14 +18,15 @@
                     <input type="text" class="form-control" @bind="@Search" @oninput="UpdateSearch" placeholder="Search by name" />
                 </div>
                 <div class="form-group">
-                    <select class="form-control" @bind="@SelectedCategory" @onclick="SelectedCat" title="Business Category">
-                        <option value="@BusinessCategory.All">All</option>
-                        <option value="@BusinessCategory.Bars">Bars</option>
-                        <option value="@BusinessCategory.Restaurants">Restaurants</option>
-                        <option value="@BusinessCategory.BurgerBars">Burger Bars</option>
-                        <option value="@BusinessCategory.CoffeeShops">Coffee Shops</option>
-                        <option value="@BusinessCategory.ConvenienceStores">Convenience Stores</option>
+                    <select class="form-control" @bind="@SelectedCategory" title="Business Category">
+                        <option value="All">All</option>
+                        <option value="Bars">Bars</option>
+                        <option value="Restaurants">Restaurants</option>
+                        <option value="BurgerBars">Burger Bars</option>
+                        <option value="CoffeeShops">Coffee Shops</option>
+                        <option value="ConvenienceStores">Convenience Stores</option>
                     </select>
+
                 </div>
             </div>
         </div>
@@ -46,7 +48,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    @if (DisplayedProductItems.Count < ProductItems.Count && ShowLoadMoreButton)
+                    @if (ShowLoadMoreButton)
                     {
                         <button @onclick="LoadMore">See More</button>
                     }
