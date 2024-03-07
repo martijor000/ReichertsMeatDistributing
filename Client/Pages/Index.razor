@@ -6,27 +6,27 @@
 @inject IJSRuntime JSRuntime;
 
 <div id="@carouselName" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-wrap="true" data-bs-interval="14000">
-    <div class="carousel-indicators">
-        @for (int i = 0; i < deals?.Count + 1; i++)
-        {
-            <button type="button" data-bs-target="#@carouselName" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")" aria-current="@(i == 0)" aria-label="Slide @(i + 1)"></button>
-        }
-    </div>
-    <div class="carousel-inner">
-        <div class="carousel-item active">
-            <div class="slider-img">
-                <img src="Pictures/Reicherts.jpg" class="d-block w-100" alt="...">
-                <div class="overlay"></div>
-                <div class="caption">
-                    <h1>NOW <span>SELLING</span> TO THE PUBLIC!</h1>
-                    <p>
-                        Purchasing from Reicherts Distributing company ensures that you receive high-quality, fresh meat products that have undergone rigorous quality control standards. Moreover, buying from this company supports local businesses, contributing to the growth and sustainability of the community.
-                    </p>
+    @if (deals != null && deals.Any()) // Check if deals exist and there is more than 1 deal
+    {
+        <div class="carousel-indicators">
+            @for (int i = 0; i < deals.Count + 1; i++)
+            {
+                <button type="button" data-bs-target="#@carouselName" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")" aria-current="@(i == 0)" aria-label="Slide @(i + 1)"></button>
+            }
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="slider-img">
+                    <img src="Pictures/Reicherts.jpg" class="d-block w-100" alt="...">
+                    <div class="overlay"></div>
+                    <div class="caption">
+                        <h1>NOW <span>SELLING</span> TO THE PUBLIC!</h1>
+                        <p>
+                            Purchasing from Reicherts Distributing company ensures that you receive high-quality, fresh meat products that have undergone rigorous quality control standards. Moreover, buying from this company supports local businesses, contributing to the growth and sustainability of the community.
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
-        @if (deals != null)
-        {
             @foreach (var deal in deals)
             {
                 <div class="carousel-item">
@@ -44,18 +44,35 @@
                     </div>
                 </div>
             }
-        }
-    </div>
-    <button class="carousel-control-prev d-none d-md-block" type="button" data-bs-target="#@carouselName" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next d-none d-md-block" type="button" data-bs-target="#@carouselName" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
-
+        </div>
+        <button class="carousel-control-prev d-none d-md-block" type="button" data-bs-target="#@carouselName" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next d-none d-md-block" type="button" data-bs-target="#@carouselName" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    }
+    else // No deals, only initial slide
+    {
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="slider-img">
+                    <img src="Pictures/Reicherts.jpg" class="d-block w-100" alt="...">
+                    <div class="overlay"></div>
+                    <div class="caption">
+                        <h1>NOW <span>SELLING</span> TO THE PUBLIC!</h1>
+                        <p>
+                            Purchasing from Reicherts Distributing company ensures that you receive high-quality, fresh meat products that have undergone rigorous quality control standards. Moreover, buying from this company supports local businesses, contributing to the growth and sustainability of the community.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 </div>
+
 
 
 
