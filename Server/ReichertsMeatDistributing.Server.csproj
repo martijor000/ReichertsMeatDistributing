@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.143" />
+    <PackageReference Include="EPPlus" Version="7.0.9" />
     <PackageReference Include="LibSassBuilder" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.5" />
@@ -31,11 +32,16 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="MySql.Data" Version="8.1.0" />
+    <PackageReference Include="NPOI" Version="2.6.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Client\ReichertsMeatDistributing.Client.csproj" />
     <ProjectReference Include="..\Shared\ReichertsMeatDistributing.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\" />
   </ItemGroup>
 
 

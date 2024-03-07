@@ -1,112 +1,189 @@
-﻿using Dapper;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MySql.Data.MySqlClient;
+using Microsoft.Extensions.Configuration;
+using MySqlX.XDevAPI.Relational;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
+using Org.BouncyCastle.Utilities.Collections;
 using ReichertsMeatDistributing.Shared;
-using System.Data;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace ReichertsMeatDistributing.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
-    public class dealsController : ControllerBase
+    public class DealsController : ControllerBase
     {
-        private readonly IConfiguration _config;
-        public string connectionId = "Default";
-        public string sqlCommand = "";
-        IEnumerable<WeeklyDeal>? _deals;
+        private readonly string _excelFilePath;
 
-        public dealsController(IConfiguration config)
+        public DealsController(IConfiguration configuration)
         {
-            _config = config;
+            _excelFilePath = configuration.GetConnectionString("ExcelFile");
+            InitializeExcelFile();
         }
 
         // GET api/deals
         [HttpGet]
-        public async Task<ActionResult<List<WeeklyDeal>>> Get()
+        public ActionResult<List<WeeklyDeal>> Get()
         {
-            using IDbConnection conn = new MySqlConnection(_config.GetConnectionString(connectionId));
-            {
-                string sqlCommand = "SELECT * FROM WeeklyDeal WHERE IsDeleted = 0";
-                var result = await conn.QueryAsync<WeeklyDeal>(sqlCommand);
-
-                if (result == null)
-                {
-                    return NotFound();
-                }
-                return Ok(result.ToList());
-            }
+            var deals = ReadDealsFromExcelFile();
+            return Ok(deals);
         }
 
         // GET api/deals/1
         [HttpGet("{id}")]
-        public async Task<ActionResult<WeeklyDeal>> GetById(int id)
+        public ActionResult<WeeklyDeal> GetById(int id)
         {
-            using IDbConnection conn = new MySqlConnection(_config.GetConnectionString(connectionId));
+            var deals = ReadDealsFromExcelFile();
+            var deal = deals.FirstOrDefault(d => d.Id == id);
+            if (deal == null)
             {
-                string sqlCommand = "SELECT * FROM WeeklyDeal WHERE Id=@Id";
-                var result = await conn.QuerySingleOrDefaultAsync<WeeklyDeal>(sqlCommand, new { Id = id });
-
-                if (result == null)
-                {
-                    return NotFound();
-                }
-                return Ok(result);
+                return NotFound();
             }
+            return Ok(deal);
         }
 
         // POST api/deals
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] WeeklyDeal deal)
+        public IActionResult Post([FromBody] WeeklyDeal deal)
         {
-            using IDbConnection conn = new MySqlConnection(_config.GetConnectionString(connectionId));
+            var deals = ReadDealsFromExcelFile();
+
+            if (deals.Any())
             {
-                string sqlCommand = "INSERT INTO WeeklyDeal (Name, Description, Price) VALUES (@Name, @Description, @Price); SELECT LAST_INSERT_ID()";
-                var newId = await conn.ExecuteScalarAsync<int>(sqlCommand, deal);
-
-                deal.Id = newId; // Set the ID of the deal object to the newly generated ID
-
-                return CreatedAtAction(nameof(GetById), new { id = newId }, deal);
+                deal.Id = deals.Max(d => d.Id) + 1; // Generate new ID
             }
+            else
+            {
+                deal.Id = 1; // Set default ID when no deals exist
+            }
+
+            deals.Add(deal); // Add the new deal to the list
+
+            WriteDealsToExcelFile(deals); // Update the Excel file
+
+            return CreatedAtAction(nameof(GetById), new { id = deal.Id }, deal);
         }
+
 
         // PUT api/deals/1
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] WeeklyDeal deal)
+        public IActionResult Put(int id, [FromBody] WeeklyDeal deal)
         {
-            using IDbConnection conn = new MySqlConnection(_config.GetConnectionString(connectionId));
+            var deals = ReadDealsFromExcelFile();
+            var existingDeal = deals.FirstOrDefault(d => d.Id == id);
+            if (existingDeal == null)
             {
-                string sqlCommand = "UPDATE WeeklyDeal SET Name=@Name, Description=@Description, Price=@Price WHERE Id=@Id";
-                var rowsUpdated = await conn.ExecuteAsync(sqlCommand, new { Name = deal.Name, Description = deal.Description, Price = deal.Price, Id = id });
-
-                if (rowsUpdated == 0)
-                {
-                    return NotFound();
-                }
-
-                return NoContent();
+                return NotFound();
             }
+
+            // Update the existing deal
+            existingDeal.Name = deal.Name;
+            existingDeal.Description = deal.Description;
+            existingDeal.Price = deal.Price;
+
+            WriteDealsToExcelFile(deals); // Update the Excel file
+
+            return NoContent();
         }
 
         // DELETE api/deals/1
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public IActionResult Delete(int id)
         {
-            using IDbConnection conn = new MySqlConnection(_config.GetConnectionString(connectionId));
+            var deals = ReadDealsFromExcelFile();
+            var dealToRemove = deals.FirstOrDefault(d => d.Id == id);
+            if (dealToRemove == null)
             {
-                string sqlCommand = "DELETE FROM WeeklyDeal WHERE Id=@Id";
-                var rowsDeleted = await conn.ExecuteAsync(sqlCommand, new { Id = id });
+                return NotFound();
+            }
 
-                if (rowsDeleted == 0)
+            deals.Remove(dealToRemove); // Remove the deal from the list
+
+            WriteDealsToExcelFile(deals); // Update the Excel file
+
+            return NoContent();
+        }
+
+        private List<WeeklyDeal> ReadDealsFromExcelFile()
+        {
+            List<WeeklyDeal> deals = new List<WeeklyDeal>();
+
+            using (FileStream file = new FileStream(_excelFilePath, FileMode.Open, FileAccess.Read))
+            {
+                XSSFWorkbook workbook = new XSSFWorkbook(file);
+                ISheet sheet = workbook.GetSheetAt(0); // Assuming the first sheet is used
+
+                for (int row = 1; row <= sheet.LastRowNum; row++)
                 {
-                    return NotFound();
+                    IRow excelRow = sheet.GetRow(row);
+                    if (excelRow != null)
+                    {
+                        deals.Add(new WeeklyDeal
+                        {
+                            Id = (int)excelRow.GetCell(0).NumericCellValue,
+                            Name = excelRow.GetCell(1).StringCellValue,
+                            Description = excelRow.GetCell(2).StringCellValue,
+                            Price = (decimal)excelRow.GetCell(3).NumericCellValue
+                        });
+                    }
+                }
+            }
+
+            return deals;
+        }
+
+        private void WriteDealsToExcelFile(List<WeeklyDeal> deals)
+        {
+            using (FileStream file = new FileStream(_excelFilePath, FileMode.Create, FileAccess.Write))
+            {
+                XSSFWorkbook workbook = new XSSFWorkbook();
+                ISheet sheet = workbook.CreateSheet("Deals");
+
+                // Write header row
+                IRow headerRow = sheet.CreateRow(0);
+                headerRow.CreateCell(0).SetCellValue("Id");
+                headerRow.CreateCell(1).SetCellValue("Name");
+                headerRow.CreateCell(2).SetCellValue("Description");
+                headerRow.CreateCell(3).SetCellValue("Price");
+
+                // Write data
+                for (int i = 0; i < deals.Count; i++)
+                {
+                    IRow dataRow = sheet.CreateRow(i + 1);
+                    dataRow.CreateCell(0).SetCellValue(deals[i].Id);
+                    dataRow.CreateCell(1).SetCellValue(deals[i].Name);
+                    dataRow.CreateCell(2).SetCellValue(deals[i].Description);
+                    dataRow.CreateCell(3).SetCellValue((double)deals[i].Price);
                 }
 
-                return NoContent();
+                workbook.Write(file);
             }
         }
 
+        private void InitializeExcelFile()
+        {
+            if (!System.IO.File.Exists(_excelFilePath))
+            {
+                using (FileStream file = new FileStream(_excelFilePath, FileMode.Create, FileAccess.Write))
+                {
+                    XSSFWorkbook workbook = new XSSFWorkbook();
+                    ISheet sheet = workbook.CreateSheet("Deals");
 
+                    // Write header row
+                    IRow headerRow = sheet.CreateRow(0);
+                    headerRow.CreateCell(0).SetCellValue("Id");
+                    headerRow.CreateCell(1).SetCellValue("Name");
+                    headerRow.CreateCell(2).SetCellValue("Description");
+                    headerRow.CreateCell(3).SetCellValue("Price");
+
+                    workbook.Write(file);
+                }
+            }
+        }
     }
 }

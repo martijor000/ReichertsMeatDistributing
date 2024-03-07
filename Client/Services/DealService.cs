@@ -93,7 +93,8 @@ namespace ReichertsMeatDistributing.Client.Services
 
         public async Task<int> DeleteDeal(int id)
         {
-            var response = await _httpClient.DeleteAsync($"api/deals/{id}");
+            var request = new HttpRequestMessage(HttpMethod.Delete, $"api/deals/{id}");
+            var response = await _httpClient.SendAsync(request);
 
             if (response.IsSuccessStatusCode)
             {
@@ -104,6 +105,7 @@ namespace ReichertsMeatDistributing.Client.Services
                 throw new Exception($"Failed to delete deal. Status code: {response.StatusCode}");
             }
         }
+
 
     }
 }

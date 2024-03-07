@@ -10,11 +10,11 @@ namespace ReichertsMeatDistributing.Server.Controllers
     [Route("api/[controller]")]
     [Produces("application/json")]
     [ApiController]
-    public class adminController : ControllerBase
+    public class AdminController : ControllerBase
     {
         private readonly string _connectionString;
 
-        public adminController(IConfiguration config)
+        public AdminController(IConfiguration config)
         {
             _connectionString = config.GetConnectionString("Default");
         }

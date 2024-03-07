@@ -16,7 +16,7 @@ builder.Services.AddScoped<IDealService, DealService>();
 // Configure HttpClient with custom certificate validation
 builder.Services.AddHttpClient<CustomHttpClient>(client =>
 {
-    // Configure other HttpClient settings if needed
+    client.BaseAddress = new Uri("https://your-production-api-url/");
 })
 .ConfigurePrimaryHttpMessageHandler(() =>
 {
@@ -35,6 +35,7 @@ builder.Services.AddHttpClient<CustomHttpClient>(client =>
 
     return handler;
 });
+
 
 
 var conn = builder.Configuration.GetConnectionString("Default");
