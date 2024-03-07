@@ -3,61 +3,60 @@
 @using ReichertsMeatDistributing.Client.Services;
 @using ReichertsMeatDistributing.Shared
 @inject IDealService ideal;
+@inject IJSRuntime JSRuntime;
 
-
-
-<div class="imgContainer">
-    <div class="image-overlay"></div>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6 mb-4">
-                <div>
+<div id="@carouselName" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-wrap="true" data-bs-interval="14000">
+    <div class="carousel-indicators">
+        @for (int i = 0; i < deals?.Count + 1; i++)
+        {
+            <button type="button" data-bs-target="#@carouselName" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")" aria-current="@(i == 0)" aria-label="Slide @(i + 1)"></button>
+        }
+    </div>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <div class="slider-img">
+                <img src="Pictures/Reicherts.jpg" class="d-block w-100" alt="...">
+                <div class="overlay"></div>
+                <div class="caption">
                     <h1>NOW <span>SELLING</span> TO THE PUBLIC!</h1>
                     <p>
                         Purchasing from Reicherts Distributing company ensures that you receive high-quality, fresh meat products that have undergone rigorous quality control standards. Moreover, buying from this company supports local businesses, contributing to the growth and sustainability of the community.
                     </p>
                 </div>
             </div>
-
-            @if (currentDeal != null)
+        </div>
+        @if (deals != null)
+        {
+            @foreach (var deal in deals)
             {
-                <div class="col-md-6 mb-4">
-                    <div class="row">
-                        <div class="col-md-2 d-flex justify-content-between align-items-center">
-                            <!-- Left-aligned button -->
-                            @if (deals.Count > 1)
-                            {
-                                <div class="buttons left-button">
-                                    <button class="btn btn-arrow shadow-none" onclick="@PreviousSlideHandler">&#8249;</button>
-                                </div>
-                            }
-                        </div>
-                        <div class="col-md-8">
+                <div class="carousel-item">
+                    <div class="slider-img">
+                        <img src="Pictures/DealOfTheWeekBG.png" class="d-block w-100" alt="...">
+                        <div class="dealCaption">
+                            <h1 class="deal-title">Deal Of The Week</h1><br />
                             <div>
-                                <h1>Deal Of The Week</h1><br />
-                                <div>
-                                    <h2>@currentDeal.Name</h2><br />
-                                    <p>@currentDeal.Description</p><br />
-                                    <h2>@currentDeal.Price.ToString("C")</h2><br />
-                                    <h3>While Supplies Last</h3>
-                                </div>
+                                <h2>@deal.Name</h2><br />
+                                <p>@deal.Description</p><br />
+                                <h2>@deal.Price.ToString("C")</h2><br />
+                                <h3>While Supplies Last</h3>
                             </div>
-                        </div>
-                        <div class="col-md-2 d-flex justify-content-between align-items-center">
-                            <!-- Right-aligned button -->
-                            @if (deals.Count > 1)
-                            {
-                                <div class="buttons right-button">
-                                    <button class="btn btn-arrow shadow-none" onclick="@NextSlideHandler">&#8250;</button>
-                                </div>
-                            }
                         </div>
                     </div>
                 </div>
             }
-        </div>
+        }
     </div>
+    <button class="carousel-control-prev d-none d-md-block" type="button" data-bs-target="#@carouselName" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next d-none d-md-block" type="button" data-bs-target="#@carouselName" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+
 </div>
+
 
 
 
