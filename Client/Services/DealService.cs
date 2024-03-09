@@ -93,7 +93,8 @@ namespace ReichertsMeatDistributing.Client.Services
 
         public async Task<int> DeleteDeal(int id)
         {
-            var request = new HttpRequestMessage(HttpMethod.Delete, $"api/deals/{id}");
+            var request = new HttpRequestMessage(HttpMethod.Post, $"api/deals/{id}");
+            request.Headers.Add("X-HTTP-Method-Override", "DELETE");
             var response = await _httpClient.SendAsync(request);
 
             if (response.IsSuccessStatusCode)

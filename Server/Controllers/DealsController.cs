@@ -90,10 +90,21 @@ namespace ReichertsMeatDistributing.Server.Controllers
 
             return NoContent();
         }
+        [HttpPost("{id}")]
+        public IActionResult Delete([FromRoute] int id)
+        {
+            if (Request.Headers.TryGetValue("X-HTTP-Method-Override", out var methodOverrideHeader))
+            {
+                if (methodOverrideHeader.ToString() == "DELETE")
+                {
+                    return DeleteInternal(id);
+                }
+            }
 
-        // DELETE api/deals/1
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+            return BadRequest();
+        }
+
+        private IActionResult DeleteInternal(int id)
         {
             var deals = ReadDealsFromExcelFile();
             var dealToRemove = deals.FirstOrDefault(d => d.Id == id);
