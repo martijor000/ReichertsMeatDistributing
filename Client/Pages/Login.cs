@@ -35,5 +35,11 @@ namespace ReichertsMeatDistributing.Client.Pages
                 isLoginFailed = true;
             }
         }
+
+        private void ForgotPassword()
+        {
+            // Navigate to the password reset page
+            NavigationManager.NavigateTo("/forgot-password");
+        }
     }
 }

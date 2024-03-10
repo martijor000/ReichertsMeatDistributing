@@ -58,5 +58,35 @@ namespace ReichertsMeatDistributing.Server.Controllers
             // Invalid username or password
             return Unauthorized();
         }
+
+        [HttpPost("reset-password")]
+        public IActionResult ResetPassword([FromBody] string email)
+        {
+            using (var conn = new MySqlConnection(_connectionString))
+            {
+                string sqlCommand = "SELECT * FROM Admin WHERE Email = @Email";
+                var admin = conn.QueryFirstOrDefault<Admin>(sqlCommand, new { Email = email });
+
+                if (admin != null)
+                {
+                    // Generate a new password
+                    string newPassword = Guid.NewGuid().ToString().Substring(0, 8);
+                    // You may want to send this password to the user via email or some other method
+
+                    // Encrypt the new password
+                    string salt = Guid.NewGuid().ToString();
+                    string hashedPassword = GenerateSHA256Hash(newPassword, salt);
+
+                    // Update the password in the database
+                    sqlCommand = "UPDATE Admin SET PasswordHash = @PasswordHash, SaltHash = @SaltHash WHERE Id = @Id";
+                    conn.Execute(sqlCommand, new { PasswordHash = hashedPassword, SaltHash = salt, Id = admin.Id });
+
+                    // Password reset successful
+                    return Ok();
+                }
+            }
+            // Invalid email address
+            return NotFound();
+        }
     }
 }
