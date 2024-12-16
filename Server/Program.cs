@@ -13,6 +13,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
 builder.Services.AddScoped<IDealService, DealService>();
+builder.Services.AddScoped<AdminService>();
 // Configure HttpClient with custom certificate validation
 builder.Services.AddHttpClient<CustomHttpClient>(client =>
 {

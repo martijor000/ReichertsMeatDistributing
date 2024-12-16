@@ -88,5 +88,23 @@ namespace ReichertsMeatDistributing.Server.Controllers
             // Invalid email address
             return NotFound();
         }
+
+        [HttpGet("admin-email")]
+        public IActionResult GetAdminEmail()
+        {
+            using (var conn = new MySqlConnection(_connectionString))
+            {
+                string sqlCommand = "SELECT Email FROM Admin";
+                var adminEmail = conn.ExecuteScalar<string>(sqlCommand);
+
+                if (adminEmail != null)
+                {
+                    return Ok(adminEmail);
+                }
+            }
+            // No admin email found
+            return NotFound();
+        }
     }
 }
+
