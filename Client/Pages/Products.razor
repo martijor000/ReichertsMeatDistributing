@@ -1,26 +1,26 @@
 ﻿@page "/Products"
 
-
-<h3>Products</h3>
-<div class="container">
-    <div class="row">
-        @foreach (var product in productList)
-        {
-            <div class="col-md-4">
-                <div class="card mb-4 shadow-sm">
-                    <img src="" class="card-img-top" alt="@product.ItemId">
-                    <div class="card-body">
-                        <h5 class="card-title">@product.ItemId</h5>
-                        <p class="card-text">@product.StockingUm</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                <button type="button" class="btn btn-sm btn-outline-secondary">Buy</button>
-                            </div>
+@if (productList == null)
+{
+    <p>Loading products...</p>
+}
+else
+{
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            @foreach (var product in productList)
+            {
+                <div class="col-md-4 d-flex justify-content-center">
+                    <div class="card mb-4 shadow-sm" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); width: 100%;">
+                        <div class="card-body text-center">
+                            <p>@product,</p>
+                            <p>@product.ItemId</p>
+                            <p class="card-text">@product.StockingUm</p>
                         </div>
                     </div>
                 </div>
-            </div>
-        }
+            }
+        </div>
     </div>
-</div>
+}
+
