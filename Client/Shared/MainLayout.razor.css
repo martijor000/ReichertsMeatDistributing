@@ -3,6 +3,10 @@
     margin: 0;
 }
 
+html, body, main, .navbar {
+    overflow-x: hidden;
+}
+
 .container {
     margin: 0px;
     padding: 0px;
@@ -73,11 +77,8 @@
     transition: color 0.3s ease;
 }
 
-    .nav-link:hover {
-        color: darkred !important; /* Hover color */
-    }
-
-
-body {
-    max-height: 100vh; /* Limit to viewport height */
+.nav-link:hover {
+    color: darkred !important; /* Hover color */
 }
+
+

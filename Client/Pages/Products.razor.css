@@ -1,0 +1,27 @@
+﻿/* Style for the search bar */
+.search-bar {
+    width: 100%; /* Make it fill the available width */
+    padding: 10px;
+    border-radius: 5px;
+    border: 2px solid #ccc;
+    font-size: 16px;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+    /* Change border and background color on focus */
+    .search-bar:focus {
+        border-color: #4CAF50; /* Green color when focused */
+        background-color: #f0f8f0; /* Light background color on focus */
+        outline: none;
+    }
+
+    /* Hover effect */
+    .search-bar:hover {
+        border-color: #80e27e; /* Slightly lighter border color when hovered */
+    }
+
+.filter-bar {
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-bottom: 50px;
+}
