@@ -8,15 +8,15 @@ namespace ReichertsMeatDistributing.Shared
 {
     public class ProductItem
     {
-        public ProductItem(string itemID, string stockingUM, string itemDescription)
+        public ProductItem(int ID, string itemID, string stockingUM)
         {
-            ItemID = itemID;
-            StockingUM = stockingUM;
-            ItemDescription = itemDescription;
+            Id = ID;
+            ItemId = itemID;
+            StockingUm = stockingUM;
         }
 
-        public string ItemID { get; }
-        public string StockingUM { get; }
-        public string ItemDescription { get;}
+        public int Id { get; }
+        public string ItemId { get; }
+        public string StockingUm { get; }
     }
 }

@@ -9,17 +9,6 @@ namespace ReichertsMeatDistributing.Client.Shared
     {
         [Inject]
         private NavigationManager NavigationManager { get; set; }
-        private bool IsMenuOpen { get; set; }
-
-        private void ToggleMenu()
-        {
-            IsMenuOpen = !IsMenuOpen;
-        }
-
-        private void CloseMenu()
-        {
-            IsMenuOpen = false;
-        }
 
         private BusinessCategory SelectedCategory { get; set; } = BusinessCategory.All;
 
@@ -27,7 +16,7 @@ namespace ReichertsMeatDistributing.Client.Shared
         private void SelectCategory(BusinessCategory category)
         {
             SelectedCategory = category;
-            NavigationManager.NavigateTo($"/Products?category={category}", forceLoad: true);
+            NavigationManager.NavigateTo($"/ProductsService?category={category}", forceLoad: true);
         }
 
     }

@@ -2,75 +2,136 @@
 @inherits LayoutComponentBase
 
 
+<head>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+        }
 
-<nav class="navbar navbar-expand-lg navbar-dark px-8 position-static">
-    <a class="navbar-brand" href=""><h1>Reicherts Distributing</h1></a>
-    <button class="navbar-toggler" type="button" @onclick="ToggleMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+        .container {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        /* Navbar background styling */
+        .navbar {
+            background-color: #F2F2F2; /* Light gray */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0px;
+        }
+
+        /* Navbar brand/logo styles */
+        .navbar-brand {
+            text-align: center;
+            text-decoration: none;
+            margin: 0;
+            padding: 0;
+            display: inline-block;
+            padding: 20px;
+        }
+
+        #one {
+            font-family: 'Brush Script MT';
+            color: darkred;
+            font-size: 80px;
+            line-height: 1.0;
+            margin: 0;
+        }
+
+        #two {
+            background-color: #0f3923;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-weight: bold;
+            color: white;
+            line-height: 20px;
+            font-size: 20px;
+            margin: 0;
+            letter-spacing: 5px;
+        }
+
+        /* Navigation links */
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px; /* Space between links */
+            width: 100%;
+            padding-bottom: 10px;
+        }
+
+        .nav-item {
+            display: flex; /* Use flex to keep "Contact Us" inline */
+            justify-content: center;
+            align-items: center;
+            width: 100px;
+            height: 50px;
+        }
+
+        .nav-link {
+            color: black !important; /* Ensure black color for links */
+            font-weight: bold;
+            text-decoration: none;
+            padding: 10px 15px;
+            white-space: nowrap; /* Prevent text from wrapping */
+            transition: color 0.3s ease;
+        }
+
+            .nav-link:hover {
+                color: darkred !important; /* Hover color */
+            }
 
 
-    @if (IsMenuOpen)
-    {
-        <div class="sidebar">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link active" href="" @onclick="CloseMenu">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="/Products" @onclick="CloseMenu">Products</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="/ContactUs" @onclick="CloseMenu">Contact Us</a>
-                </li>
-            </ul>
+        body {
+            max-height: 100vh; /* Limit to viewport height */
+        }
+    </style>
+</head>
+<header>
+    <nav class="navbar">
+        <!-- Logo -->
+        <div>
+            <a class="navbar-brand" href="/">
+                <div id="one">Reichert's</div>
+                <div id="two">DISTRIBUTING</div>
+            </a>
         </div>
-    }
-
-        <div class="collapse navbar-collapse" id="collapsibleNavbar">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link active" href="">Home</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown" href="/Products" id="productsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:white">
-                        Products
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="productsDropdown" style="background-color: lightgray">
-                        <button class="dropdown-item" @onclick="() => SelectCategory(BusinessCategory.All)">All</button>
-                        <button class="dropdown-item" @onclick="() => SelectCategory(BusinessCategory.Bars)">Bars</button>
-                        <button class="dropdown-item" @onclick="() => SelectCategory(BusinessCategory.Restaurants)">Restaurants</button>
-                        <button class="dropdown-item" @onclick="() => SelectCategory(BusinessCategory.BurgerBars)">Burger Bars</button>
-                        <button class="dropdown-item" @onclick="() => SelectCategory(BusinessCategory.CoffeeShops)">Coffee Shops</button>
-                        <button class="dropdown-item" @onclick="() => SelectCategory(BusinessCategory.ConvenienceStores)">Convenience Stores</button>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="/ContactUs">Contact Us</a>
-                </li>
-            </ul>
+        <!-- Navigation Links -->
+        <div class="nav-container">
+            <div class="nav-item">
+                <a class="nav-link" href="/">Home</a>
+            </div>
+            <div class="nav-item">
+                <a class="nav-link" href="/Products">Products</a>
+            </div>
+            <div class="nav-item">
+                <a class="nav-link" href="/Contact">Contact Us</a>
+            </div>
         </div>
-</nav>
+    </nav>
+</header>
 <main>
-        @Body
+    @Body
 </main>
 
 <footer class="footer">
     <div class="socialBar">
-            <div class="row">
-                <div class="col-md-12">
-                    <h1>Follow Us On Facebook!</h1>
-                </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Follow Us On Facebook!</h1>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <a href="https://www.facebook.com/profile.php?id=100091676846072">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16">
-                            <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z" />
-                        </svg>
-                    </a>
-                </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <a href="https://www.facebook.com/profile.php?id=100091676846072">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16">
+                        <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z" />
+                    </svg>
+                </a>
             </div>
+        </div>
     </div>
     <div class="navlinks">
         <div class="row">

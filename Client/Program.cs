@@ -12,5 +12,6 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddScoped<CustomAuthenticationStateProvider>();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 builder.Services.AddScoped<IDealService, DealService>();
+builder.Services.AddScoped<IProductsService, ProductsService>();
 
 await builder.Build().RunAsync();

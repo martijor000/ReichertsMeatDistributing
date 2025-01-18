@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReichertsMeatDistributing.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReichertsMeatDistributing.Shared", "Shared\ReichertsMeatDistributing.Shared.csproj", "{B3000350-4F5F-41A9-953C-1C71A707BB92}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddData", "AddData\AddData.csproj", "{5EDD7417-36D5-46B2-B4D0-81CFA61F537A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{B3000350-4F5F-41A9-953C-1C71A707BB92}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3000350-4F5F-41A9-953C-1C71A707BB92}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B3000350-4F5F-41A9-953C-1C71A707BB92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EDD7417-36D5-46B2-B4D0-81CFA61F537A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EDD7417-36D5-46B2-B4D0-81CFA61F537A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EDD7417-36D5-46B2-B4D0-81CFA61F537A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EDD7417-36D5-46B2-B4D0-81CFA61F537A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
