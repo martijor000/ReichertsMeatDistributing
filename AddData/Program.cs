@@ -23,11 +23,12 @@ using (var connection = new MySqlConnection(connectionString))
     {
         // Insert each product into the database
         var command = new MySqlCommand(
-            "INSERT INTO ProductsService (ItemId, StockingUm) VALUES (@code, @size)",
+            "INSERT INTO Products (ItemId, StockingUm, Description) VALUES (@code, @size, @description)",
             connection);
 
         command.Parameters.AddWithValue("@code", product.ItemId);
         command.Parameters.AddWithValue("@size", product.StockingUm);
+        command.Parameters.AddWithValue("@description", product.Description);
 
         command.ExecuteNonQuery();
     }
