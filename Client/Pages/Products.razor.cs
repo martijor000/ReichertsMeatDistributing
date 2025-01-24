@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using ReichertsMeatDistributing.Shared;
-using ReichertsMeatDistributing.Client.Services;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.JSInterop;
 
 namespace ReichertsMeatDistributing.Client.Pages
 {
@@ -19,7 +15,15 @@ namespace ReichertsMeatDistributing.Client.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            await GetProducts();
+            await JSRuntime.InvokeVoidAsync("window.scrollTo", 0, 0);
+            if (Index.IsLoaded)
+            {
+                productList = Index.GetProducts();
+            }
+            else
+            {
+                await GetProducts();
+            }
             FilterProducts();
         }
 
