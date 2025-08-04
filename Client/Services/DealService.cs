@@ -34,77 +34,73 @@ namespace ReichertsMeatDistributing.Client.Services
 
         public async Task GetDeals()
         {
-            var response = await _httpClient.GetAsync("api/deals");
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                deals = await response.Content.ReadFromJsonAsync<List<WeeklyDeal>>();
+                // For GitHub Pages, load from static JSON file
+                deals = await _httpClient.GetFromJsonAsync<List<WeeklyDeal>>("deals.json");
+                
+                if (deals == null)
+                {
+                    deals = new List<WeeklyDeal>();
+                }
             }
-            else
+            catch
             {
-                // handle error
+                // Fallback to empty list if file not found
+                deals = new List<WeeklyDeal>();
             }
         }
 
         public async Task<WeeklyDeal> GetDealById(int id)
         {
-            var response = await _httpClient.GetAsync($"api/deals/{id}");
-
-            if (response.IsSuccessStatusCode)
+            await GetDeals(); // Ensure deals are loaded
+            var deal = deals.FirstOrDefault(d => d.Id == id);
+            
+            if (deal == null)
             {
-                var deal = await response.Content.ReadFromJsonAsync<WeeklyDeal>();
-                return deal;
+                throw new Exception($"Deal with ID {id} not found");
             }
-            else
-            {
-                throw new Exception($"Failed to retrieve deal. Status code: {response.StatusCode}");
-            }
+            
+            return deal;
         }
 
 
         public async Task<int> AddDeal(WeeklyDeal deal)
         {
-            var response = await _httpClient.PostAsJsonAsync("api/deals", deal);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var createdDeal = await response.Content.ReadFromJsonAsync<WeeklyDeal>();
-                return createdDeal.Id;
-            }
-            else
-            {
-                throw new Exception($"Failed to add deal. Status code: {response.StatusCode}");
-            }
+            // For static hosting, admin features need to be updated
+            // For now, just add to local list
+            await GetDeals();
+            deal.Id = deals.Count > 0 ? deals.Max(d => d.Id) + 1 : 1;
+            deals.Add(deal);
+            return deal.Id;
         }
 
         public async Task<int> UpdateDeal(int id, WeeklyDeal deal)
         {
-            var response = await _httpClient.PutAsJsonAsync($"api/deals/{id}", deal);
-
-            if (response.IsSuccessStatusCode)
+            // For static hosting, admin features need to be updated
+            // For now, just update local list
+            await GetDeals();
+            var existingDeal = deals.FirstOrDefault(d => d.Id == id);
+            if (existingDeal != null)
             {
-                return id;
+                existingDeal.Name = deal.Name;
+                existingDeal.Description = deal.Description;
+                existingDeal.Price = deal.Price;
             }
-            else
-            {
-                throw new Exception($"Failed to update deal. Status code: {response.StatusCode}");
-            }
+            return id;
         }
 
         public async Task<int> DeleteDeal(int id)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, $"api/deals/{id}");
-            request.Headers.Add("X-HTTP-Method-Override", "DELETE");
-            var response = await _httpClient.SendAsync(request);
-
-            if (response.IsSuccessStatusCode)
+            // For static hosting, admin features need to be updated
+            // For now, just remove from local list
+            await GetDeals();
+            var dealToRemove = deals.FirstOrDefault(d => d.Id == id);
+            if (dealToRemove != null)
             {
-                return id;
+                deals.Remove(dealToRemove);
             }
-            else
-            {
-                throw new Exception($"Failed to delete deal. Status code: {response.StatusCode}");
-            }
+            return id;
         }
 
 

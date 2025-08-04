@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "name": "Premium Ground Beef",
+    "description": "Fresh ground beef, perfect for burgers and meatballs",
+    "price": 8.99
+  },
+  {
+    "id": 2,
+    "name": "Chicken Breast",
+    "description": "Boneless, skinless chicken breast - great for grilling",
+    "price": 12.99
+  },
+  {
+    "id": 3,
+    "name": "Pork Chops",
+    "description": "Thick-cut pork chops, ideal for pan-frying",
+    "price": 9.99
+  }
+] 
