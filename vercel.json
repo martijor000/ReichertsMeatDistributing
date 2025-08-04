@@ -1,0 +1,6 @@
+{
+  "buildCommand": "dotnet publish Client/ReichertsMeatDistributing.Client.csproj --configuration Release --output ./publish",
+  "outputDirectory": "publish/wwwroot",
+  "framework": "blazor",
+  "installCommand": "dotnet restore"
+} 

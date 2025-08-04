@@ -1,10 +1,6 @@
 using ReichertsMeatDistributing.Client.Services;
 using ReichertsMeatDistributing.Server;
 using Microsoft.Extensions.DependencyInjection;
-using System.Collections;
-using System.Net.Http;
-using System.Security.Cryptography.X509Certificates;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,32 +10,12 @@ builder.Services.AddRazorPages();
 builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
 builder.Services.AddScoped<IDealService, DealService>();
 builder.Services.AddScoped<AdminService>();
-// Configure HttpClient with custom certificate validation
+
+// Configure HttpClient without certificate validation for now
 builder.Services.AddHttpClient<CustomHttpClient>(client =>
 {
     client.BaseAddress = new Uri("https://your-production-api-url/");
-})
-.ConfigurePrimaryHttpMessageHandler(() =>
-{
-    var handler = new CustomHttpClientHandler();
-
-    // Access the certificate and validate it
-    var certificatePath = "Certificate\\reichertsdistributing.der";
-    var certificateBytes = System.IO.File.ReadAllBytes(certificatePath);
-
-    handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) =>
-    {
-        // Compare the certificate's raw bytes to the expected bytes
-        byte[] certificateRawBytes = cert.GetRawCertData();
-        return StructuralComparisons.StructuralEqualityComparer.Equals(certificateRawBytes, certificateBytes);
-    };
-
-    return handler;
 });
-
-
-
-var conn = builder.Configuration.GetConnectionString("Default");
 
 var app = builder.Build();
 
@@ -47,6 +23,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
+    app.UseHttpsRedirection();
 }
 else
 {
@@ -55,7 +32,6 @@ else
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 app.UseRouting();
@@ -63,23 +39,14 @@ app.UseRouting();
 app.MapRazorPages();
 app.MapControllers();
 
-
 app.MapFallbackToFile("index.html");
 
 app.Run();
 
 public class CustomHttpClient : HttpClient
 {
-    public CustomHttpClient(HttpClientHandler handler) : base(handler)
+    public CustomHttpClient(HttpClient httpClient) : base()
     {
-    }
-}
-
-public class CustomHttpClientHandler : HttpClientHandler
-{
-    public CustomHttpClientHandler()
-    {
-        // No need to instantiate the certificate validation here
-        // It is done within the ConfigurePrimaryHttpMessageHandler
+        // Simplified constructor
     }
 }
