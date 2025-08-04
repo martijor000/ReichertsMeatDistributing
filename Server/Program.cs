@@ -1,5 +1,7 @@
 using ReichertsMeatDistributing.Client.Services;
 using ReichertsMeatDistributing.Server;
+using ReichertsMeatDistributing.Server.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +12,10 @@ builder.Services.AddRazorPages();
 builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
 builder.Services.AddScoped<IDealService, DealService>();
 builder.Services.AddScoped<AdminService>();
+
+// Add SQLite database
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
 
 // Configure HttpClient without certificate validation for now
 builder.Services.AddHttpClient<CustomHttpClient>(client =>
@@ -40,6 +46,13 @@ app.MapRazorPages();
 app.MapControllers();
 
 app.MapFallbackToFile("index.html");
+
+// Ensure database is created
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    context.Database.EnsureCreated();
+}
 
 app.Run();
 
