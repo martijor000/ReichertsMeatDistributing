@@ -11,7 +11,7 @@ namespace ReichertsMeatDistributing.Server.Data
 
         public DbSet<WeeklyDeal> WeeklyDeals { get; set; }
         public DbSet<ProductItem> Products { get; set; }
-        public DbSet<BusinessCategory> BusinessCategories { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -29,20 +29,13 @@ namespace ReichertsMeatDistributing.Server.Data
             // Configure ProductItem
             modelBuilder.Entity<ProductItem>(entity =>
             {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
-                entity.Property(e => e.Description).HasMaxLength(500);
-                entity.Property(e => e.Price).HasColumnType("decimal(18,2)");
-                entity.Property(e => e.Category).HasMaxLength(50);
+                entity.HasKey(e => e.ItemID);
+                entity.Property(e => e.ItemID).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.ItemDescription).HasMaxLength(500);
+                entity.Property(e => e.StockingUM).HasMaxLength(50);
             });
 
-            // Configure BusinessCategory
-            modelBuilder.Entity<BusinessCategory>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
-                entity.Property(e => e.Description).HasMaxLength(500);
-            });
+
         }
     }
 } 
