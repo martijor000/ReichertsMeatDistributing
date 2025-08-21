@@ -153,10 +153,17 @@ builder.Services.AddScoped<IAuthorizationHandler, AdminAuthorizationHandler>();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
 
-// Configure HttpClient without certificate validation for now
+// Configure HttpClient for production
 builder.Services.AddHttpClient<CustomHttpClient>(client =>
 {
-    client.BaseAddress = new Uri("https://your-production-api-url/");
+    if (builder.Environment.IsDevelopment())
+    {
+        client.BaseAddress = new Uri("https://localhost:7000/");
+    }
+    else
+    {
+        client.BaseAddress = new Uri("https://reichertsdistributing.com/");
+    }
 });
 
 var app = builder.Build();
@@ -191,12 +198,29 @@ app.MapFallbackToFile("index.html");
 // Ensure database is created and seeded
 using (var scope = app.Services.CreateScope())
 {
-    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    context.Database.EnsureCreated();
-    
-    // Seed products from ProductRepository (always run in production)
-    var seeder = scope.ServiceProvider.GetRequiredService<ProductSeederService>();
-    await seeder.SeedProductsAsync();
+    try
+    {
+        var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        context.Database.EnsureCreated();
+        
+        // Check if database has data, if not, seed it
+        if (!context.Products.Any())
+        {
+            Console.WriteLine("Database is empty, seeding products...");
+            var seeder = scope.ServiceProvider.GetRequiredService<ProductSeederService>();
+            await seeder.SeedProductsAsync();
+            Console.WriteLine("Database seeded successfully!");
+        }
+        else
+        {
+            Console.WriteLine($"Database has {context.Products.Count()} products, skipping seed.");
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error during database setup: {ex.Message}");
+        // Continue running the app even if database setup fails
+    }
 }
 
 app.Run();
