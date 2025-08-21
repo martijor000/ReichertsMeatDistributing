@@ -1,51 +1,199 @@
-﻿@using Microsoft.AspNetCore.Authorization;
-@using ReichertsMeatDistributing.Client.Services;
+﻿@using ReichertsMeatDistributing.Client.Services;
 @using ReichertsMeatDistributing.Shared;
 @inject IDealService ideal;
-@attribute [Authorize]
+@inject NavigationManager navigationManager
 @page "/admin/deals/add"
-<div id="container">
-    <h1>Add Deal</h1>
-    <EditForm Model="@newDeal" OnValidSubmit="HandleValidSubmit">
-        <DataAnnotationsValidator />
 
-        <div class="form-group">
-            <label for="name">Name:</label>
-            <InputText id="name" class="form-control" @bind-Value="newDeal.Name" />
+<AuthenticationGuard>
+    <div class="admin-container">
+    <div class="admin-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="admin-title">📦 Add New Deal</h1>
+            <button class="btn btn-outline-secondary" @onclick="GoBack">
+                <i class="oi oi-arrow-left me-2"></i>Back to Deals
+            </button>
         </div>
+    </div>
 
-        <div class="form-group">
-            <label for="description">Description:</label>
-            <InputTextArea id="description" class="form-control" @bind-Value="newDeal.Description" />
-        </div>
+    <div class="form-container">
+        <EditForm Model="@newDeal" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger mb-3" />
 
-        <div class="form-group">
-            <label for="price">Price:</label>
-            <InputNumber id="price" class="form-control" @bind-Value="newDeal.Price" />
-        </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="form-group mb-4">
+                        <label for="name" class="form-label">Deal Name *</label>
+                        <InputText id="name" class="form-control modern-input" @bind-Value="newDeal.Name" 
+                                 placeholder="Enter deal name (e.g., 'Weekly Beef Special')" />
+                    </div>
 
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Save</button>
-        </div>
-    </EditForm>
-</div>
+                    <div class="form-group mb-4">
+                        <label for="description" class="form-label">Description *</label>
+                        <InputTextArea id="description" class="form-control modern-input" @bind-Value="newDeal.Description" 
+                                     rows="4" placeholder="Describe the deal in detail..." />
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label for="price" class="form-label">Price ($) *</label>
+                        <InputNumber id="price" class="form-control modern-input" @bind-Value="newDeal.Price" 
+                                   step="0.01" placeholder="0.00" />
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success btn-lg me-3" disabled="@isSubmitting">
+                            @if (isSubmitting)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                                <span>Saving...</span>
+                            }
+                            else
+                            {
+                                <i class="oi oi-check me-2"></i>
+                                <span>Save Deal</span>
+                            }
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary btn-lg" @onclick="GoBack">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="preview-card">
+                        <h5>Preview</h5>
+                        <div class="deal-preview">
+                            <h6>@(string.IsNullOrEmpty(newDeal.Name) ? "Deal Name" : newDeal.Name)</h6>
+                            <p>@(string.IsNullOrEmpty(newDeal.Description) ? "Deal description will appear here..." : newDeal.Description)</p>
+                            <div class="price-preview">@newDeal.Price.ToString("C")</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+    </div>
+</AuthenticationGuard>
+
+<style>
+    .admin-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #f8f9fa;
+        min-height: 100vh;
+    }
+
+    .admin-header {
+        background: white;
+        padding: 20px 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+    }
+
+    .admin-title {
+        color: #2c3e50;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .form-container {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 8px;
+    }
+
+    .modern-input {
+        border-radius: 8px;
+        border: 2px solid #e9ecef;
+        padding: 12px 16px;
+        font-size: 16px;
+        transition: all 0.3s;
+    }
+
+    .modern-input:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+    }
+
+    .form-actions {
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .preview-card {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+    }
+
+    .deal-preview h6 {
+        color: #2c3e50;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .deal-preview p {
+        color: #6c757d;
+        margin-bottom: 15px;
+        font-size: 14px;
+    }
+
+    .price-preview {
+        background: #28a745;
+        color: white;
+        padding: 8px 12px;
+        border-radius: 15px;
+        font-weight: 600;
+        display: inline-block;
+    }
+</style>
 
 @code {
     private WeeklyDeal newDeal = new WeeklyDeal();
-
-    [Inject]
-    private NavigationManager navigationManager { get; set; }
+    private bool isSubmitting = false;
 
     private async Task HandleValidSubmit()
     {
-        var newDeal = new WeeklyDeal
+        if (isSubmitting) return;
+
+        try
+        {
+            isSubmitting = true;
+            
+            var dealToAdd = new WeeklyDeal
             {
-                Name = this.newDeal.Name,
-                Description = this.newDeal.Description,
-                Price = this.newDeal.Price
+                Name = newDeal.Name,
+                Description = newDeal.Description,
+                Price = newDeal.Price
             };
 
-        await ideal.AddDeal(newDeal);
+            await ideal.AddDeal(dealToAdd);
+            navigationManager.NavigateTo("/admin/deals");
+        }
+        catch (Exception ex)
+        {
+            // Handle error - in a real app you'd show a toast/alert
+            Console.WriteLine($"Error adding deal: {ex.Message}");
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+
+    private void GoBack()
+    {
         navigationManager.NavigateTo("/admin/deals");
     }
 }

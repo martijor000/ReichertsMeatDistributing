@@ -26,13 +26,20 @@ namespace ReichertsMeatDistributing.Server.Data
                 entity.Property(e => e.Price).HasColumnType("decimal(18,2)");
             });
 
-            // Configure ProductItem
+            // Configure ProductItem - work with existing table structure
             modelBuilder.Entity<ProductItem>(entity =>
             {
                 entity.HasKey(e => e.ItemID);
                 entity.Property(e => e.ItemID).IsRequired().HasMaxLength(100);
-                entity.Property(e => e.ItemDescription).HasMaxLength(500);
-                entity.Property(e => e.StockingUM).HasMaxLength(50);
+                entity.Property(e => e.ItemDescription).IsRequired().HasMaxLength(500);
+                entity.Property(e => e.StockingUM).IsRequired().HasMaxLength(50);
+                
+                // New fields - these will be added via migration
+                entity.Property(e => e.Category).HasDefaultValue(BusinessCategory.All);
+                entity.Property(e => e.Price).HasColumnType("decimal(18,2)");
+                entity.Property(e => e.IsActive).HasDefaultValue(true);
+                entity.Property(e => e.CreatedDate).HasDefaultValueSql("datetime('now')");
+                entity.Property(e => e.ModifiedDate);
             });
 
 

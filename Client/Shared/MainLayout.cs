@@ -21,6 +21,13 @@ namespace ReichertsMeatDistributing.Client.Shared
             IsMenuOpen = false;
         }
 
+        [JSInvokable]
+        public static void CloseMenuOnResize()
+        {
+            // This will be called from JavaScript when screen is resized to desktop
+            // The menu will be hidden by CSS on desktop anyway
+        }
+
         private BusinessCategory SelectedCategory { get; set; } = BusinessCategory.All;
 
 

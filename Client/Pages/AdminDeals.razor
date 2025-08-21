@@ -1,13 +1,11 @@
-﻿@using System.Security.Claims;
-@using Microsoft.AspNetCore.Authorization
-@using ReichertsMeatDistributing.Client.Services;
+﻿@using ReichertsMeatDistributing.Client.Services;
 @using ReichertsMeatDistributing.Shared;
 @inject IDealService ideal;
 @page "/admin/deals/edit/{id:int}"
-@inject CustomAuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager navigationManager
 
-<div id="container">
+<AuthenticationGuard>
+    <div id="container">
     <h1>Edit Deal</h1>
     @if (deal == null)
     {
@@ -33,7 +31,8 @@
             <button type="button" class="btn btn-danger" @onclick="DeleteDeal">Delete</button>
         </EditForm>
     }
-</div>
+    </div>
+</AuthenticationGuard>
 
 @code {
     [Parameter]
@@ -43,18 +42,15 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-
-        if (!user.Identity.IsAuthenticated)
+        try
         {
-            navigationManager.NavigateTo("/");
+            await LoadDealAsync();
         }
-        else if (!user.IsInRole("admin"))
+        catch (Exception ex)
         {
-            navigationManager.NavigateTo("/");
+            // If there's an error, redirect to login
+            navigationManager.NavigateTo("/login");
         }
-        await LoadDealAsync();
     }
 
     private async Task LoadDealAsync()

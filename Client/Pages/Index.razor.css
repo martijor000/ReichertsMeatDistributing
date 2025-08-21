@@ -1,214 +1,869 @@
-﻿.carousel-container {
+﻿/* Modern Index Page Styling - Deal of the Week Focused */
+
+/* Container class for consistent layout */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* Hero Section - Full-width with background image */
+.hero-section {
     position: relative;
-    width: 100% !important;
-    overflow: hidden !important;
-    right: 0 !important;
-    height: 980px; /* Use viewport height for full screen */
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
 }
 
-.carousel-control-prev,
-.carousel-control-next {
+.hero-background {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 5; /* Ensure buttons are above other elements */
-    background: none; /* Remove default background */
-    border: none; /* Remove default border */
-    padding: 0 10px; /* Add padding for easier click */
-}
-
-.carousel-control-prev {
+    top: 0;
     left: 0;
-}
-
-.carousel-control-next {
-    right: 0;
-}
-
-.carousel-inner {
-    overflow: visible;
-}
-
-.carousel-item:first-of-type .overlay {
-    background-color: rgba(0, 0, 0, 0.7); /* Adjust the opacity (0.7) to make it darker */
-}
-
-.carousel-item {
-    position: relative;
     width: 100%;
-    height: 100%; /* Adjust height if necessary */
-    opacity: 0; /* Start with opacity 0 for fade effect */
-    transition: opacity 0.5s ease; /* Smooth transition for fade effect */
+    height: 100%;
+    background: url('Pictures/Reicherts.jpg') center/cover;
 }
-    .carousel-item.active {
-        opacity: 1; /* Active slide should have opacity 1 */
-        z-index: 1; /* Ensure active slide is above other slides */
-    }
 
-
-    .carousel-item img {
-        width: 100%; /* Ensure the image width fills its container */
-        height: 740px; /* Allow the image to adjust its height while maintaining aspect ratio */
-        object-fit: cover; /* Cover the entire slide with the image */
-    }
-
-
-    .carousel-item .caption {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        text-align: left;
-        color: white;
-        font-size: 20px;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 2);
-        font-family: Arial, sans-serif;
-        z-index: 2;
-    }
-
-    .carousel-item .overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-    }
-
-.dealCaption {
+.hero-overlay {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    color: white;
-    font-size: 20px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 2);
-    font-family: Arial, sans-serif;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
     z-index: 2;
+    width: 100%;
+}
+
+.hero-main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.hero-text {
+    color: white;
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+    text-shadow: 0 4px 12px rgba(0,0,0,0.8);
+    color: white;
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    opacity: 1;
+    line-height: 1.6;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+    font-weight: 500;
+    color: white;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.hero-buttons .btn {
+    padding: 0.9rem 1.8rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    min-width: 150px;
+    text-align: center;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.hero-buttons .btn-primary {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    border-color: #ff6b6b;
+    color: white;
+    box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+}
+
+.hero-buttons .btn-primary:hover {
+    background: linear-gradient(135deg, #ee5a24 0%, #d63031 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(255, 107, 107, 0.6);
+}
+
+.hero-buttons .btn-outline-light {
+    border: 2px solid white;
+    color: white;
+    background: transparent;
+}
+
+.hero-buttons .btn-outline-light:hover {
+    background: white;
+    color: #000000;
+    transform: translateY(-3px);
+}
+
+.hero-image {
+    text-align: center;
+}
+
+.hero-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease;
+}
+
+.hero-image img:hover {
+    transform: scale(1.05);
+}
+
+/* Deal of the Week - Main Focus Section */
+.deal-hero-section {
+    padding: 6rem 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    position: relative;
+}
+
+.deal-hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    background: linear-gradient(to bottom, white, transparent);
+}
+
+.deal-hero {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.deal-hero-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.deal-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3);
+}
+
+.deal-icon {
+    font-size: 1.2rem;
 }
 
 .deal-title {
-    font-weight: bold;
-    font-size: 50px;
-    color: red;
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+    line-height: 1.2;
 }
 
-
-.container {
-    padding-bottom: 50px;
+.deal-subtitle {
+    font-size: 1.2rem;
+    color: #475569;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+    font-weight: 400;
 }
 
-.text-center {
-    padding: 5%;
+.deal-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-.th,
-.td {
-    text-align: center;
-}
-
-.td {
-    font-size: 20px;
-}
-
-h3 {
-    font-size: 30px;
-}
-
-.container:last-child {
-    padding-top: 30px;
-}
-
-#bkg {
-    background-color: #524c51;
-    width: 100%;
-    color: white;
-}
-
-    #bkg a {
-        color: deepskyblue;
-    }
-
-@media (max-width: 780px) {
-    .imgContainer .container {
-        top: 40%;
-    }
-}
-
-/* Your existing styles below */
-.imgContainer .container,
-.imgContainer .card-body {
-    background-color: transparent;
-}
-
-.image-overlay {
-    z-index: 2;
-}
-
-h1 span {
-    color: #b9db80;
-}
-
-.col-md-4 button {
-    color: whitesmoke;
-    height: 100%;
-    overflow: hidden;
-    font-size: 40px;
-    border-radius: 0;
-}
-
-.col-md-6:nth-child(2) {
-    background-color: darkolivegreen;
-    text-align: center;
-    border-radius: 50%;
-    padding: 5%;
-    word-wrap: normal;
+.deal-card {
+    background: white;
+    border-radius: 24px;
+    padding: 2rem;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+    position: relative;
     overflow: hidden;
 }
 
-    .col-md-6:nth-child(2) h1,
-    .col-md-6:nth-child(2) h3 {
-        text-shadow: 2px 2px 2px black;
-        font-size: xx-large;
-    }
-
-    .col-md-6:nth-child(2) h2 {
-        font-weight: bold;
-        color: white;
-    }
-
-.col-md-6 .col-md-2 {
-    align-self: center;
+.deal-card.featured {
+    border: 2px solid #ff6b6b;
+    transform: scale(1.02);
 }
 
-.col-md-4 a {
-    text-decoration: none;
-    color: black;
+.deal-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.15);
 }
 
-.btn {
-    font-size: 30px;
-    color: white;
-}
-
-@media (max-width: 767px) {
-    .col-md-6:nth-child(1) {
-        margin-top: 150px; /* Add some space at the bottom */
-        padding: 30px;
-        word-wrap: normal;
-    }
-}
-
-.imgContainer .container {
+.deal-card::before {
+    content: '';
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1;
-    background-color: none;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #ff6b6b, #ee5a24, #ff6b6b);
 }
 
-.col-md-12 {
-    float: right;
+.deal-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.deal-tag {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.deal-price {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1e293b;
+}
+
+.deal-card-body {
+    margin-bottom: 2rem;
+}
+
+.deal-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1rem;
+}
+
+.deal-description {
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.deal-features {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.deal-feature {
+    color: #059669;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.deal-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.deal-availability {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+.btn-deal {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.btn-deal:hover {
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+    transform: translateY(-2px);
+    color: white;
+    text-decoration: none;
+}
+
+/* Placeholder deal styling */
+.deal-card.placeholder {
+    border-color: #94a3b8;
+}
+
+.deal-card.placeholder .deal-tag {
+    background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+}
+
+.deal-card.placeholder::before {
+    background: linear-gradient(90deg, #94a3b8, #64748b, #94a3b8);
+}
+
+/* Business Categories Section */
+.categories-section {
+    padding: 6rem 0;
+    background: white;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+}
+
+.section-subtitle {
+    font-size: 1.1rem;
+    color: #64748b;
+    max-width: 600px;
+    margin: 0 auto;
+    font-weight: 400;
+}
+
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.category-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    border: 2px solid #f1f5f9;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.category-card:hover {
+    transform: translateY(-8px);
+    border-color: #3b82f6;
+    box-shadow: 0 20px 40px rgba(59, 130, 246, 0.15);
+    text-decoration: none;
+    color: inherit;
+}
+
+.category-icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    display: block;
+}
+
+.category-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1rem;
+}
+
+.category-description {
+    color: #64748b;
+    line-height: 1.5;
+}
+
+/* Company Info Section */
+.company-section {
+    padding: 6rem 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.company-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.company-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 2rem;
+}
+
+.company-features {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.company-feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+}
+
+.feature-icon {
+    font-size: 2rem;
+    background: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    flex-shrink: 0;
+}
+
+.feature-content h4 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.feature-content p {
+    color: #64748b;
+    line-height: 1.6;
+}
+
+/* Hours Card */
+.hours-card {
+    background: white;
+    border-radius: 20px;
+    padding: 3.5rem;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    border: 1px solid #e2e8f0;
+    min-height: 400px;
+    width: 100%;
+    max-width: 500px;
+}
+
+.hours-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.hours-header h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.hours-header p {
+    color: #64748b;
+}
+
+.hours-grid {
+    margin-bottom: 2rem;
+}
+
+.hours-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.hours-row:last-child {
+    border-bottom: none;
+}
+
+.hours-row .day {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.hours-row .time {
+    color: #64748b;
+}
+
+.hours-footer {
+    text-align: center;
+}
+
+.btn-outline-primary {
+    border: 2px solid #3b82f6;
+    color: #3b82f6;
+    background: transparent;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+    background: #3b82f6;
+    color: white;
+    text-decoration: none;
+}
+
+/* Call to Action Section */
+.cta-section {
+    padding: 6rem 0;
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    color: white;
+    text-align: center;
+}
+
+.cta-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.cta-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    font-weight: 400;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.cta-buttons .btn {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    min-width: 180px;
+}
+
+.cta-buttons .btn-primary {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    border: none;
+    color: white;
+}
+
+.cta-buttons .btn-primary:hover {
+    background: linear-gradient(135deg, #ee5a24 0%, #d63031 100%);
+    transform: translateY(-3px);
+    color: white;
+    text-decoration: none;
+}
+
+.cta-buttons .btn-outline-primary {
+    border: 2px solid white;
+    color: white;
+    background: transparent;
+}
+
+.cta-buttons .btn-outline-primary:hover {
+    background: white;
+    color: #1e293b;
+    transform: translateY(-3px);
+    text-decoration: none;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .hero-main {
+        gap: 3rem;
+    }
+    
+    .company-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+    
+    .deal-grid {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 800px;
+    }
+}
+
+@media (max-width: 992px) {
+    .hero-main {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 2rem;
+    }
+    
+    .hero-title {
+        font-size: 2.8rem;
+    }
+    
+    .deal-title {
+        font-size: 2.4rem;
+    }
+    
+    .section-title {
+        font-size: 2.2rem;
+    }
+    
+    .cta-title {
+        font-size: 2.2rem;
+    }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .hero-main {
+        grid-template-columns: 1fr !important;
+        text-align: center !important;
+        gap: 2rem !important;
+        padding: 0 1rem !important;
+    }
+    
+    .hero-buttons {
+        flex-direction: column !important;
+        gap: 0.8rem !important;
+        width: 100% !important;
+        max-width: 300px !important;
+        margin: 0 auto !important;
+        justify-content: center !important;
+        align-items: center !important;
+        flex-wrap: wrap !important;
+    }
+    
+    .hero-buttons .btn {
+        width: 100% !important;
+        min-width: auto !important;
+        padding: 1rem 1.5rem !important;
+        font-size: 0.95rem !important;
+        flex-shrink: 0 !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem !important;
+        line-height: 1.1 !important;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.1rem !important;
+        margin-bottom: 2rem !important;
+    }
+    
+    .deal-title {
+        font-size: 2rem !important;
+    }
+    
+    .deal-subtitle {
+        font-size: 1.1rem !important;
+    }
+    
+    .section-title {
+        font-size: 2rem !important;
+    }
+    
+    .company-title {
+        font-size: 1.8rem !important;
+    }
+    
+    .cta-title {
+        font-size: 2rem !important;
+    }
+    
+    .deal-grid {
+        grid-template-columns: 1fr !important;
+        max-width: 400px !important;
+    }
+    
+    .deal-hero {
+        padding: 0 1rem !important;
+    }
+    
+    .categories-section {
+        padding: 3rem 1rem !important;
+    }
+    
+    .company-section {
+        padding: 3rem 1rem !important;
+    }
+    
+    .deal-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem !important;
+        padding: 0 1rem !important;
+    }
+    
+    .categories-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem !important;
+        padding: 0 1rem !important;
+    }
+    
+    .company-grid {
+        grid-template-columns: 1fr !important;
+        gap: 2rem !important;
+        padding: 0 1rem !important;
+    }
+    
+    .cta-buttons {
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+    
+    .cta-buttons .btn {
+        width: 100% !important;
+        max-width: 280px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-main {
+        padding: 0 1rem;
+    }
+    
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .deal-hero {
+        padding: 0 1rem;
+    }
+    
+    .deal-title {
+        font-size: 1.8rem;
+    }
+    
+    .deal-card {
+        padding: 1.5rem;
+    }
+    
+    .section-title {
+        font-size: 1.8rem;
+    }
+    
+    .categories-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .category-card {
+        padding: 2rem 1.5rem;
+    }
+    
+    .company-feature {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .hours-card {
+        margin: 0 1rem;
+        padding: 2rem 1.5rem;
+    }
+}
+
+/* Mobile Responsiveness for Company Features */
+@media (max-width: 768px) {
+    .company-feature {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+        align-items: center;
+    }
+    
+    .feature-icon {
+        margin: 0 auto;
+    }
+    
+    .feature-content {
+        text-align: center;
+        width: 100%;
+    }
+    
+    .feature-content h4 {
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+    
+    .feature-content p {
+        text-align: center;
+        margin: 0 auto;
+        max-width: 300px;
+    }
+}
+
+/* Mobile Responsiveness for Business Hours Card - Clean Fix */
+@media (max-width: 768px) {
+    .hours-card {
+        margin: 0 1rem;
+        padding: 3rem 2rem;
+        width: calc(100% - 2rem);
+        max-width: none;
+        min-height: 350px;
+    }
+    
+    .company-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        padding: 0 1rem;
+    }
+    
+    .hours-header h3 {
+        font-size: 1.8rem;
+    }
+    
+    .hours-header p {
+        font-size: 1rem;
+    }
+    
+    .hours-row {
+        padding: 1.5rem 0;
+    }
+    
+    .hours-row .day {
+        font-size: 1rem;
+    }
+    
+    .hours-row .time {
+        font-size: 0.95rem;
+    }
 }
