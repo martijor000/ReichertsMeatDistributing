@@ -364,5 +364,12 @@ FodyWeavers.xsd
 
 # Sensitive configuration files
 Server/appsettings.json
-Server/appsettings.*.json
+Server/appsettings.Development.json
 !Server/appsettings.template.json
+
+# Deployment scripts (may contain sensitive data)
+deploy-production.ps1
+
+# User secrets and sensitive files
+Server/secrets.json
+Server/google-service-account.json

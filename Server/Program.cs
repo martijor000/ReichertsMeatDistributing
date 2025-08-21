@@ -22,6 +22,7 @@ builder.Services.AddScoped<IDealService, DealService>();
 builder.Services.AddScoped<AdminService>();
 builder.Services.AddScoped<ProductSeederService>();
 builder.Services.AddScoped<AdminAuthorizationService>();
+builder.Services.AddScoped<IGoogleCloudService, GoogleCloudService>();
 
 // Add Authentication
 builder.Services.AddAuthentication(options =>
@@ -56,8 +57,13 @@ builder.Services.AddAuthentication(options =>
 })
 .AddGoogle(options =>
 {
-    options.ClientId = builder.Configuration["Authentication:Google:ClientId"] ?? "";
-    options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"] ?? "";
+    // Get credentials from environment variables or configuration
+    options.ClientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID") 
+                       ?? builder.Configuration["Authentication:Google:ClientId"] 
+                       ?? "";
+    options.ClientSecret = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET") 
+                           ?? builder.Configuration["Authentication:Google:ClientSecret"] 
+                           ?? "";
     options.CallbackPath = "/signin-google";
     
     options.Events.OnCreatingTicket = context =>
@@ -188,7 +194,7 @@ using (var scope = app.Services.CreateScope())
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     context.Database.EnsureCreated();
     
-    // Seed products from ProductRepository
+    // Seed products from ProductRepository (always run in production)
     var seeder = scope.ServiceProvider.GetRequiredService<ProductSeederService>();
     await seeder.SeedProductsAsync();
 }
