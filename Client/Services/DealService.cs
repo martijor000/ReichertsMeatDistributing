@@ -36,17 +36,21 @@ namespace ReichertsMeatDistributing.Client.Services
         {
             try
             {
-                // For GitHub Pages, load from static JSON file
-                deals = await _httpClient.GetFromJsonAsync<List<WeeklyDeal>>("deals.json");
+                // Load from server API
+                var response = await _httpClient.GetAsync("api/deals");
                 
-                if (deals == null)
+                if (response.IsSuccessStatusCode)
+                {
+                    deals = await response.Content.ReadFromJsonAsync<List<WeeklyDeal>>() ?? new List<WeeklyDeal>();
+                }
+                else
                 {
                     deals = new List<WeeklyDeal>();
                 }
             }
             catch
             {
-                // Fallback to empty list if file not found
+                // Fallback to empty list if API fails
                 deals = new List<WeeklyDeal>();
             }
         }
@@ -67,40 +71,73 @@ namespace ReichertsMeatDistributing.Client.Services
 
         public async Task<int> AddDeal(WeeklyDeal deal)
         {
-            // For static hosting, admin features need to be updated
-            // For now, just add to local list
-            await GetDeals();
-            deal.Id = deals.Count > 0 ? deals.Max(d => d.Id) + 1 : 1;
-            deals.Add(deal);
-            return deal.Id;
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync("api/deals", deal);
+                
+                if (response.IsSuccessStatusCode)
+                {
+                    var createdDeal = await response.Content.ReadFromJsonAsync<WeeklyDeal>();
+                    if (createdDeal != null)
+                    {
+                        // Refresh local cache
+                        await GetDeals();
+                        return createdDeal.Id;
+                    }
+                }
+                
+                throw new Exception("Failed to add deal");
+            }
+            catch
+            {
+                throw new Exception("Failed to add deal");
+            }
         }
 
         public async Task<int> UpdateDeal(int id, WeeklyDeal deal)
         {
-            // For static hosting, admin features need to be updated
-            // For now, just update local list
-            await GetDeals();
-            var existingDeal = deals.FirstOrDefault(d => d.Id == id);
-            if (existingDeal != null)
+            try
             {
-                existingDeal.Name = deal.Name;
-                existingDeal.Description = deal.Description;
-                existingDeal.Price = deal.Price;
+                var response = await _httpClient.PutAsJsonAsync($"api/deals/{id}", deal);
+                
+                if (response.IsSuccessStatusCode)
+                {
+                    // Refresh local cache
+                    await GetDeals();
+                    return id;
+                }
+                
+                throw new Exception("Failed to update deal");
             }
-            return id;
+            catch
+            {
+                throw new Exception("Failed to update deal");
+            }
         }
 
         public async Task<int> DeleteDeal(int id)
         {
-            // For static hosting, admin features need to be updated
-            // For now, just remove from local list
-            await GetDeals();
-            var dealToRemove = deals.FirstOrDefault(d => d.Id == id);
-            if (dealToRemove != null)
+            try
             {
-                deals.Remove(dealToRemove);
+                // The server expects a POST with method override header
+                var request = new HttpRequestMessage(HttpMethod.Post, $"api/deals/{id}");
+                request.Headers.Add("X-HTTP-Method-Override", "DELETE");
+                
+                var response = await _httpClient.SendAsync(request);
+                
+                if (response.IsSuccessStatusCode)
+                {
+                    // Refresh local cache
+                    await GetDeals();
+                    return id;
+                }
+                
+                throw new Exception("Failed to delete deal");
             }
-            return id;
+            catch
+            {
+                throw new Exception("Failed to delete deal");
+            }
         }
 
 

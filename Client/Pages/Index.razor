@@ -5,195 +5,247 @@
 @inject IDealService ideal;
 @inject IJSRuntime JSRuntime;
 
-<div id="@carouselName" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-wrap="true" data-bs-interval="14000">
-    @if (deals != null && deals.Any()) // Check if deals exist and there is more than 1 deal
+@code {
+    private async Task ScrollToDeals()
     {
-        <div class="carousel-indicators">
-            @for (int i = 0; i < deals.Count + 1; i++)
-            {
-                <button type="button" data-bs-target="#@carouselName" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")" aria-current="@(i == 0)" aria-label="Slide @(i + 1)"></button>
-            }
-        </div>
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <div class="slider-img">
-                    <img src="Pictures/Reicherts.jpg" class="d-block w-100" alt="...">
-                    <div class="overlay"></div>
-                    <div class="caption">
-                        <h1>NOW <span>SELLING</span> TO THE PUBLIC!</h1>
-                        <p>
-                            Purchasing from Reicherts Distributing company ensures that you receive high-quality, fresh meat products that have undergone rigorous quality control standards. Moreover, buying from this company supports local businesses, contributing to the growth and sustainability of the community.
-                        </p>
+        await JSRuntime.InvokeVoidAsync("scrollToElement", "deals-section");
+    }
+}
+
+<!-- Hero Section with Background Image Only -->
+<div class="hero-section">
+    <div class="hero-background"></div>
+    <div class="hero-overlay"></div>
+    
+    <div class="hero-content">
+        <div class="container">
+            <div class="hero-main">
+                <div class="hero-text">
+                    <h1 class="hero-title">Reicherts Distributing</h1>
+                    <p class="hero-subtitle">Premium Quality Food Products for Your Business</p>
+                    <div class="hero-buttons">
+                        <button @onclick="ScrollToDeals" class="btn btn-primary btn-lg">Explore Deals</button>
+                        <a href="/Products" class="btn btn-outline-light btn-lg">Explore Products</a>
+                        <a href="/ContactUs" class="btn btn-outline-light btn-lg">Get in Touch</a>
                     </div>
                 </div>
             </div>
-            @foreach (var deal in deals)
-            {
-                <div class="carousel-item">
-                    <div class="slider-img">
-                        <img src="Pictures/DealOfTheWeekBG.png" class="d-block w-100" alt="...">
-                        <div class="dealCaption">
-                            <h1 class="deal-title">Deal Of The Week</h1><br />
-                            <div>
-                                <h2>@deal.Name</h2><br />
-                                <p>@deal.Description</p><br />
-                                <h2>@deal.Price.ToString("C")</h2><br />
-                                <h3>While Supplies Last</h3>
+        </div>
+    </div>
+</div>
+
+<!-- Deal of the Week - MAIN FOCUS Section -->
+<div class="deal-hero-section" id="deals-section">
+    <div class="container">
+        <div class="deal-hero">
+            <div class="deal-hero-header">
+                <div class="deal-badge">
+                    <span class="deal-icon">🔥</span>
+                    <span class="deal-text">DEAL OF THE WEEK</span>
+                </div>
+                <h2 class="deal-title">Special Offers Just For You</h2>
+                <p class="deal-subtitle">Limited time deals on premium products</p>
+            </div>
+            
+            <div class="deal-grid">
+                @if (deals != null && deals.Any())
+                {
+                    @foreach (var deal in deals)
+                    {
+                        <div class="deal-card featured">
+                            <div class="deal-card-header">
+                                <div class="deal-tag">HOT DEAL</div>
+                                <div class="deal-price">$@deal.Price.ToString("F2")</div>
+                            </div>
+                            <div class="deal-card-body">
+                                <h3 class="deal-name">@deal.Name</h3>
+                                <p class="deal-description">@deal.Description</p>
+                                <div class="deal-features">
+                                    <span class="deal-feature">✓ Premium Quality</span>
+                                    <span class="deal-feature">✓ Limited Time</span>
+                                </div>
+                            </div>
+                            <div class="deal-card-footer">
+                                <span class="deal-availability">While Supplies Last</span>
+                                <a href="/ContactUs" class="btn btn-deal">Order Now</a>
                             </div>
                         </div>
-                    </div>
-                </div>
-            }
-        </div>
-        <button class="carousel-control-prev d-none d-md-block" type="button" data-bs-target="#@carouselName" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next d-none d-md-block" type="button" data-bs-target="#@carouselName" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-    }
-    else // No deals, only initial slide
-    {
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <div class="slider-img">
-                    <img src="Pictures/Reicherts.jpg" class="d-block w-100" alt="...">
-                    <div class="overlay"></div>
-                    <div class="caption">
-                        <h1>NOW <span>SELLING</span> TO THE PUBLIC!</h1>
-                        <p>
-                            Purchasing from Reicherts Distributing company ensures that you receive high-quality, fresh meat products that have undergone rigorous quality control standards. Moreover, buying from this company supports local businesses, contributing to the growth and sustainability of the community.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
-</div>
-
-
-
-
-
-<div class="container">
-    <h1 class="text-center">We Proudly Serve</h1>
-    <div class="row justify-content-center">
-        <div class="col-md-4 mb-3">
-            <a href="/Products?category=Bars">
-            <div class="card border-0">
-                <img src="/Pictures/Bar.jpg" width="300" height="200" class="card-img-top" style="object-fit: cover;" alt="...">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Bars</h5>
-                    <p class="card-text">We offer a wide range of products for bars, including breaded mozzarella sticks, jalapeno poppers, ground beef patties, chicken breast, deli ham, cocktail smokies, salad dressings, energy drinks, and more.</p>
-                </div>
-            </div>
-            </a>
-        </div>
-        <div class="col-md-4 mb-3">
-            <a href="/Products?category=Restaurants">
-                <div class="card border-0">
-                    <img src="/Pictures/Restaurant.jpg" width="300" height="200" class="card-img-top" style="object-fit: cover;" alt="...">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Restaurants</h5>
-                        <p class="card-text">We offer a wide range of products for restaurants, including breaded appetizers, frozen meats, shredded cheeses, dressings, sauces, and breakfast items, as well as cleaning supplies and disposables.</p>
-                    </div>
-                </div>
-            </a>
-        </div>
-        <div class="col-md-4 mb-3">
-            <a href="/Products?category=BurgerBars">
-                <div class="card border-0">
-                    <img src="/Pictures/BurgerBar.jpg" width="300" height="200" class="card-img-top" style="object-fit: cover;" alt="...">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Burger Bars</h5>
-                        <p class="card-text">We offer a wide range of products for burger bars, including beef strips, chicken fillets, various cheeses, toppings, dressings, and condiments, along with a variety of packaging and cleaning supplies.</p>
-                    </div>
-                </div>
-            </a>
-        </div>
-        <div class="row justify-content-center ">
-            <div class="col-md-4 mb-3 pt-lg-5">
-                <a href="/Products?category=CoffeeShops">
-                <div class="card border-0">
-                    <img src="/Pictures/Coffee.jpg" width="300" height="200" class="card-img-top" style="object-fit: cover;" alt="...">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Coffee Shops</h5>
-                        <p class="card-text">
-                            In an espresso shop, customers can enjoy the perfect cup of espresso with 2% milk, Hershey's chocolate syrup, Ghirardelli white chocolate, whipped topping and more.
-                        </p>
-                    </div>
-                </div>
-            </a>
-            </div>
-            <div class="col-md-4 mb-3 pt-lg-5">
-                <a href="/Products?category=ConvenienceStores">
-                    <div class="card border-0">
-                        <img src="/Pictures/ConvenienceStore.jpg" width="300" height="200" class="card-img-top" style="object-fit: cover;" alt="...">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Convenience Stores</h5>
-                            <p class="card-text">We have a range of convenience store items like mozzarella sticks, jalapeno poppers, chicken tenders, breakfast sandwiches, sausage patties, corn dogs, and snack burritos.</p>
+                    }
+                }
+                else
+                {
+                    <!-- Sample deals when none are available -->
+                    <div class="deal-card featured">
+                        <div class="deal-card-header">
+                            <div class="deal-tag">HOT DEAL</div>
+                            <div class="deal-price">$24.99</div>
+                        </div>
+                        <div class="deal-card-body">
+                            <h3 class="deal-name">Premium Angus Beef Patties</h3>
+                            <p class="deal-description">High-quality 80/20 ground beef patties, perfect for restaurants and burger bars. Each patty is hand-formed and individually wrapped for freshness.</p>
+                            <div class="deal-features">
+                                <span class="deal-feature">✓ Premium Quality</span>
+                                <span class="deal-feature">✓ Limited Time</span>
+                            </div>
+                        </div>
+                        <div class="deal-card-footer">
+                            <span class="deal-availability">While Supplies Last</span>
+                            <a href="/ContactUs" class="btn btn-deal">Order Now</a>
                         </div>
                     </div>
-                </a>
+                    
+                    <div class="deal-card featured">
+                        <div class="deal-card-header">
+                            <div class="deal-tag">HOT DEAL</div>
+                            <div class="deal-price">$32.99</div>
+                        </div>
+                        <div class="deal-card-body">
+                            <h3 class="deal-name">Fresh Chicken Breast Pack</h3>
+                            <p class="deal-description">Boneless, skinless chicken breasts from free-range chickens. Perfect for grilling, baking, or frying. Pack of 10 large breasts.</p>
+                            <div class="deal-features">
+                                <span class="deal-feature">✓ Premium Quality</span>
+                                <span class="deal-feature">✓ Limited Time</span>
+                            </div>
+                        </div>
+                        <div class="deal-card-footer">
+                            <span class="deal-availability">While Supplies Last</span>
+                            <a href="/ContactUs" class="btn btn-deal">Order Now</a>
+                        </div>
+                    </div>
+                    
+                    <div class="deal-card featured">
+                        <div class="deal-card-header">
+                            <div class="deal-tag">HOT DEAL</div>
+                            <div class="deal-price">$28.99</div>
+                        </div>
+                        <div class="deal-card-body">
+                            <h3 class="deal-name">Gourmet Sausage Assortment</h3>
+                            <p class="deal-description">Artisanal sausages including bratwurst, Italian, and chorizo. Made with premium spices and natural casings. Great for bars and restaurants.</p>
+                            <div class="deal-features">
+                                <span class="deal-feature">✓ Premium Quality</span>
+                                <span class="deal-feature">✓ Limited Time</span>
+                            </div>
+                        </div>
+                        <div class="deal-card-footer">
+                            <span class="deal-availability">While Supplies Last</span>
+                            <a href="/ContactUs" class="btn btn-deal">Order Now</a>
+                        </div>
+                    </div>
+                }
             </div>
         </div>
     </div>
 </div>
 
-    <div id="bkg">
-        <h1 class="text-center">And <a href="/Products">More...</a></h1>
+<!-- Business Categories Section -->
+<div class="categories-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">We Serve All Types of Businesses</h2>
+            <p class="section-subtitle">From restaurants to convenience stores, we've got you covered</p>
+        </div>
+        
+        <div class="categories-grid">
+            <a href="/Products?category=Bars" class="category-card">
+                <div class="category-icon">🍺</div>
+                <h3 class="category-name">Bars & Pubs</h3>
+                <p class="category-description">Premium products for your bar menu</p>
+            </a>
+            
+            <a href="/Products?category=Restaurants" class="category-card">
+                <div class="category-icon">🍽️</div>
+                <h3 class="category-name">Restaurants</h3>
+                <p class="category-description">Quality ingredients for fine dining</p>
+            </a>
+            
+            <a href="/Products?category=BurgerBars" class="category-card">
+                <div class="category-icon">🍔</div>
+                <h3 class="category-name">Burger Bars</h3>
+                <p class="category-description">Perfect products for your burgers</p>
+            </a>
+            
+            <a href="/Products?category=CoffeeShops" class="category-card">
+                <div class="category-icon">☕</div>
+                <h3 class="category-name">Coffee Shops</h3>
+                <p class="category-description">Light bites and snacks</p>
+            </a>
+            
+            <a href="/Products?category=ConvenienceStores" class="category-card">
+                <div class="category-icon">🏪</div>
+                <h3 class="category-name">Convenience Stores</h3>
+                <p class="category-description">Ready-to-sell products</p>
+            </a>
+        </div>
     </div>
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-sm-12">
-            <div class="card border-0">
-                <div class="card-body">
-                    <h3 class="card-title text-center">Hours of Operation</h3>
+</div>
 
-                    <table class="table text-center">
-                        <thead>
-                            <tr>
-                                <th>Day</th>
-                                <th>Hours</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Monday</td>
-                                <td>6:00 AM - 2:00 PM</td>
-                            </tr>
-                            <tr>
-                                <td>Tuesday</td>
-                                <td>6:00 AM - 2:00 PM</td>
-                            </tr>
-                            <tr>
-                                <td>Wednesday</td>
-                                <td>6:00 AM - 2:00 PM</td>
-                            </tr>
-                            <tr>
-                                <td>Thursday</td>
-                                <td>6:00 AM - 2:00 PM</td>
-                            </tr>
-                            <tr>
-                                <td>Friday</td>
-                                <td>6:00 AM - 2:00 PM</td>
-                            </tr>
-                            <tr>
-                                <td>Saturday</td>
-                                <td>Closed</td>
-                            </tr>
-                            <tr>
-                                <td>Sunday</td>
-                                <td>Closed</td>
-                            </tr>
-                        </tbody>
-                    </table>
+<!-- Company Info Section -->
+<div class="company-section">
+    <div class="container">
+        <div class="company-grid">
+            <div class="company-info">
+                <h3 class="company-title">Why Choose Reicherts?</h3>
+                <div class="company-features">
+                    <div class="company-feature">
+                        <div class="feature-icon">🌟</div>
+                        <div class="feature-content">
+                            <h4>Premium Quality</h4>
+                            <p>We source only the finest ingredients for your business</p>
+                        </div>
+                    </div>
+                    
+                    <div class="company-feature">
+                        <div class="feature-icon">🚚</div>
+                        <div class="feature-content">
+                            <h4>Reliable Delivery</h4>
+                            <p>Consistent, on-time delivery to keep your business running</p>
+                        </div>
+                    </div>
+                    
+                    <div class="company-feature">
+                        <div class="feature-icon">💰</div>
+                        <div class="feature-content">
+                            <h4>Competitive Pricing</h4>
+                            <p>Great value without compromising on quality</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hours-card">
+                <div class="hours-header">
+                    <h3>🕒 Business Hours</h3>
+                    <p>We're here when you need us</p>
+                </div>
+                <div class="hours-grid">
+                    <div class="hours-row">
+                        <span class="day">Monday - Friday</span>
+                        <span class="time">6:00 AM - 2:00 PM</span>
+                    </div>
+                    <div class="hours-row">
+                        <span class="day">Saturday</span>
+                        <span class="time">Closed</span>
+                    </div>
+                    <div class="hours-row">
+                        <span class="day">Sunday</span>
+                        <span class="time">Closed</span>
+                    </div>
+                </div>
+                <div class="hours-footer">
+                    <a href="/ContactUs" class="btn btn-outline-primary">Contact Us</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    window.scrollToElement = function (elementId) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+</script>
 
 

@@ -1,0 +1,120 @@
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Routing
+@inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
+
+@if (isLoading)
+{
+    <div class="loading-container">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2">Verifying authentication...</p>
+    </div>
+}
+else if (IsAdminRoute(routeData.PageType) && !isAuthenticated)
+{
+    <div class="unauthorized-container">
+        <div class="alert alert-warning" role="alert">
+            <h4 class="alert-heading">Access Denied</h4>
+            <p>You are not authorized to access this page. Please log in with an authorized account.</p>
+            <hr>
+            <button class="btn btn-primary" @onclick="RedirectToLogin">Go to Login</button>
+        </div>
+    </div>
+}
+else
+{
+    <RouteView RouteData="@routeData" DefaultLayout="@DefaultLayout" />
+}
+
+@code {
+    [Parameter]
+    public RouteData routeData { get; set; }
+
+    [Parameter]
+    public Type DefaultLayout { get; set; }
+
+    private bool isLoading = true;
+    private bool isAuthenticated = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            isAuthenticated = await IsAuthenticatedAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Authentication check failed: {ex.Message}");
+            isAuthenticated = false;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private bool IsAdminRoute(Type pageType)
+    {
+        if (pageType == null) return false;
+        
+        var fullName = pageType.FullName;
+        return fullName != null && fullName.Contains("Admin");
+    }
+
+    private async Task<bool> IsAuthenticatedAsync()
+    {
+        try
+        {
+            var response = await HttpClient.GetAsync("api/admin/auth-status");
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<AuthStatusResponse>();
+                return result?.IsAuthenticated ?? false;
+            }
+        }
+        catch
+        {
+            // If we can't check auth status, assume not authenticated
+        }
+        return false;
+    }
+
+    private class AuthStatusResponse
+    {
+        public bool IsAuthenticated { get; set; }
+        public string? Email { get; set; }
+        public string? Name { get; set; }
+    }
+
+    private void RedirectToLogin()
+    {
+        NavigationManager.NavigateTo("/login");
+    }
+}
+
+<style>
+    .loading-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 50vh;
+        text-align: center;
+    }
+
+    .unauthorized-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 50vh;
+        text-align: center;
+    }
+
+    .unauthorized-container .alert {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+</style>

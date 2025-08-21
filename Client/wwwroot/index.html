@@ -3,47 +3,42 @@
 
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ReichertsMeatDistributing</title>
     <base href="/" />
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
     <link href="css/app.css" rel="stylesheet" />
     <link href="ReichertsMeatDistributing.Client.styles.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
 </head>
 
 <body>
     <div id="app">Loading...</div>
 
-    <!-- Your other scripts and content -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <div id="blazor-error-ui">
         An unhandled error has occurred.
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="_framework/blazor.webassembly.js"></script>
-    <script type="text/javascript">
-        // Single Page Apps for GitHub Pages
-        // https://github.com/rafgraph/spa-github-pages
-        (function(l) {
-            if (l.search[1] === '/' ) {
-                var decoded = l.search.slice(1).split('&').map(function(s) { 
-                    return s.replace(/~and~/g, '&')
-                }).join('?');
-                window.history.replaceState(null, null,
-                    l.pathname.slice(0, -1) + decoded + l.hash
-                );
-            }
-        }(window.location))
+    
+    <script src="_framework/blazor.webassembly.js" autostart="false"></script>
+    <script>
+        Blazor.start().catch(err => {
+            console.error('Blazor startup error:', err);
+        });
     </script>
     <script>
         function startCarousel(carouselName) {
-            // Your carousel initialization code here
-            $('#' + carouselName).carousel();
+            // Simple carousel function
+            console.log('Carousel function called for:', carouselName);
+        }
+
+        function downloadFile(base64String, contentType, fileName) {
+            const link = document.createElement('a');
+            link.download = fileName;
+            link.href = 'data:' + contentType + ';base64,' + base64String;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
     </script>
 </body>

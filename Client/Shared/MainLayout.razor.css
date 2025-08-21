@@ -1,136 +1,323 @@
-/* The side navigation menu */
-.sidebar {
-    margin: 20px;
-    padding: 0;
-    width: 200px;
-    position: fixed;
-    height: 100%;
-    overflow: auto;
+/* Navbar Styling - Desktop Default */
+nav {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    padding: 1.5rem 2%; /* Increased from 1rem to 1.5rem */
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    position: relative; /* Added for dropdown positioning */
+    min-height: 80px; /* Added minimum height */
 }
-
-/* Sidebar links */
-.sidebar a {
-display: block;
-padding: 4px;
-text-decoration: none;
-}
-
-.dropdown:hover .dropdown-menu {
-    display: block;
-}
-
-/* Active/current link */
-.sidebar a.active {
-    color: white;
-}
-
-.navbar a.active {
-    color: white;
-
-}
-
-.nav-item{
-    padding-left: 10px;
-}
-.navbar-nav {
-    margin-right: 20px;
-}
-
-navbar{
-    overflow: hidden;
-}
-
 
 .navbar-brand h1 {
-    font-family: Arial;
-    font-size: 30px;
+    font-size: 2.2rem; /* Increased from 1.8rem to 2.2rem */
+    font-weight: 700;
+    color: white;
+    margin: 0;
 }
 
-.nav-item a{
-    font-family: Arial;
-    font-size: 20px;
+.nav-item {
+    padding-left: 10px;
 }
 
-div.content {
-    margin-left: 200px;
-    padding: 1px 16px;
-    height: 1000px;
+.nav-item a {
+    font-family: Arial, sans-serif;
+    font-size: 1.1rem;
+    color: white;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    text-decoration: none;
 }
 
-.sidebar {
-    width: 100%;
-    height: auto;
-    position: relative;
+.nav-item a:hover {
+    color: #ff6b6b;
 }
 
-.sidebar a {
-    float: left;
+.navbar-toggler {
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 0.25rem 0.5rem;
 }
 
-div.content {
-    margin-left: 0;
+.navbar-toggler:focus {
+    box-shadow: none;
+    outline: none;
 }
 
-nav {
-    background-color: rgba(0, 0, 0, 0.9);
-    padding:2%
-
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 
-
-/*
+/* Desktop navigation - Hide Mobile Menu */
 @media (min-width: 992px) {
+    .navbar-toggler {
+        display: none !important;
+    }
     
-
-    .navbar-toggler{
-        display : none
-    }
-
-    .sidebar{
-        display : none
-    }
-
-}*/
-
-@media (max-width: 991px) {
     .sidebar {
+        display: none !important;
+    }
+    
+    .collapse.navbar-collapse {
+        display: flex !important;
+    }
+}
+
+/* Mobile navigation */
+@media (max-width: 991px) {
+    .collapse.navbar-collapse {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        height: 0 !important;
+        overflow: hidden !important;
+    }
+    
+    .navbar-toggler {
         display: block !important;
     }
-}
-
-
-footer {
-    color:white;
-    overflow: hidden;
-}
-
-.footer a:not(.socialBar a){
-    text-decoration: none;
-    color:white;
-}
-
-.socialBar {
-    background-color: #524C51;
-    width: 100%;
-}
-
-.navlinks{
-    background-color: black;
-    padding-top: 20px;
-    padding-bottom: 20px;
-}
-
-.row{
-    text-align: center;
-    padding: 20px;
-}
-
-.container:not(.socialBar){
-    background-color: black;
-}
-
-footer .navlinks .row:last-child{
-   color: darkolivegreen;
-   padding-top: 100px;
     
+    .sidebar {
+        display: none; /* Hidden by default on mobile */
+    }
+    
+    .sidebar.show {
+        display: block !important; /* Show when menu is open on mobile */
+    }
+}
+
+/* Mobile Responsiveness - Only on Small Screens */
+@media (max-width: 768px) {
+    nav {
+        padding: 1rem 1rem; /* Adjusted for mobile but still larger than before */
+        min-height: 70px; /* Slightly smaller on mobile but still substantial */
+    }
+    
+    .navbar-brand h1 {
+        font-size: 1.6rem; /* Increased from 1.2rem to 1.6rem */
+        margin-right: 2rem;
+    }
+    
+    .navbar-toggler {
+        margin-left: auto;
+    }
+}
+
+/* Mobile Menu Styling - With Arrow */
+.sidebar {
+    display: none;
+    background: #334155;
+    min-width: 200px;
+    z-index: 1000;
+    margin-top: 12px;
+    position: absolute;
+    top: 100%;
+    right: 0;
+}
+
+.sidebar::before {
+    content: '';
+    position: absolute;
+    top: -12px;
+    right: 20px;
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 12px solid #334155;
+}
+
+.sidebar.show {
+    display: block !important;
+}
+
+.sidebar .navbar-nav {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.sidebar .nav-item {
+    margin: 0;
+}
+
+.sidebar .nav-link {
+    display: block;
+    padding: 1rem 1.5rem;
+    color: white;
+    text-decoration: none;
+    font-family: Arial, sans-serif;
+    font-size: 0.95rem;
+    font-weight: 400;
+}
+
+.sidebar .nav-link:hover {
+    background-color: rgba(255,255,255,0.05);
+}
+
+/* Footer Styling - Restored */
+footer {
+    color: white;
+    overflow: hidden;
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    padding: 3rem 0 2rem 0;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* Ready to Get Started Section */
+.footer-cta {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-cta h2 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.footer-cta p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+}
+
+.footer-cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.footer-cta-buttons .btn {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    min-width: 180px;
+}
+
+.footer-cta-buttons .btn-primary {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    border: none;
+    color: white;
+}
+
+.footer-cta-buttons .btn-primary:hover {
+    background: linear-gradient(135deg, #ee5a24 0%, #d63031 100%);
+    transform: translateY(-3px);
+    color: white;
+    text-decoration: none;
+}
+
+.footer-cta-buttons .btn-outline-light {
+    border: 2px solid white;
+    color: white;
+    background: transparent;
+}
+
+.footer-cta-buttons .btn-outline-light:hover {
+    background: white;
+    color: #1e293b;
+    transform: translateY(-3px);
+    text-decoration: none;
+}
+
+/* Company Info Section */
+.footer-main {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.footer-info {
+    text-align: center;
+}
+
+.footer-info h3 {
+    color: white;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+}
+
+.contact-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    align-items: flex-start;
+    text-align: left;
+    margin: 0 auto;
+    max-width: 400px;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #e2e8f0;
+    font-size: 0.9rem;
+    width: 100%;
+    justify-content: flex-start;
+}
+
+.contact-item svg {
+    color: #ff6b6b;
+    flex-shrink: 0;
+}
+
+.contact-item a {
+    color: #e2e8f0;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.contact-item a:hover {
+    color: #ff6b6b;
+}
+
+/* Copyright Section */
+.footer-copyright {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 0.9rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-copyright p {
+    margin: 0;
+}
+
+/* Mobile Footer Responsiveness */
+@media (max-width: 768px) {
+    .footer-cta h2 {
+        font-size: 2rem;
+    }
+    
+    .footer-cta p {
+        font-size: 1.1rem;
+    }
+    
+    .footer-cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .footer-cta-buttons .btn {
+        width: 100%;
+        max-width: 280px;
+    }
 }

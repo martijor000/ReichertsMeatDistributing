@@ -1,60 +1,694 @@
 ﻿@using ReichertsMeatDistributing.Client.Services;
 @using ReichertsMeatDistributing.Shared;
+@using Microsoft.JSInterop;
 @page "/admin/deals"
-@inject CustomAuthenticationStateProvider AuthenticationStateProvider
 @inject IDealService ideal
+@inject IProductService productService
 @inject NavigationManager navigationManager
-<div class="imgContainer">
-    <div>
-    <h1>Deals</h1>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Price</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
+@inject HttpClient HttpClient
+@inject IJSRuntime JSRuntime
 
-                @if(deals != null){
-                    @foreach (var deal in deals)
-                    {
-                        <tr>
-                            <td>@deal.Name</td>
-                            <td>@deal.Description</td>
-                            <td>@deal.Price.ToString("c")</td>
-                            <td><a href="/admin/deals/edit/@deal.Id">Edit</a></td>
-                            <td><button @onclick="()=>DeleteDeal(deal.Id)">Delete</button></td>
-                        </tr>
-                    }
+<AuthenticationGuard>
+    <div class="admin-container">
+        <!-- Header -->
+        <div class="admin-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 class="admin-title">🏪 Admin Dashboard</h1>
+                <button class="btn btn-outline-danger" @onclick="Logout">
+                    <i class="oi oi-account-logout me-2"></i>Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="admin-tabs">
+            <button class="tab-btn @(activeTab == "deals" ? "active" : "")" @onclick="@(() => SetActiveTab("deals"))">
+                📦 Deals Management
+            </button>
+            <button class="tab-btn @(activeTab == "products" ? "active" : "")" @onclick="@(() => SetActiveTab("products"))">
+                🛍️ Products Management
+            </button>
+        </div>
+
+        <!-- Deals Tab -->
+        @if (activeTab == "deals")
+        {
+            <div class="tab-content">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>📦 Weekly Deals</h2>
+                    <button class="btn btn-success" @onclick="NavigateToAddDealPage">
+                        <i class="oi oi-plus me-2"></i>Add New Deal
+                    </button>
+                </div>
+
+                @if (deals == null)
+                {
+                    <div class="loading">Loading deals...</div>
                 }
-            </tbody>
-        </table>
-    <button @onclick="NavigateToAddDealPage">Add Deal</button>
+                else if (!deals.Any())
+                {
+                    <div class="empty-state">
+                        <h4>No deals found</h4>
+                        <p>Create your first deal to get started!</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover modern-table">
+                            <thead>
+                                <tr>
+                                    <th>Deal Name</th>
+                                    <th>Description</th>
+                                    <th>Price</th>
+                                    <th width="200">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var deal in deals)
+                                {
+                                    <tr>
+                                        <td><strong>@deal.Name</strong></td>
+                                        <td>@deal.Description</td>
+                                        <td><span class="price-badge">@deal.Price.ToString("C")</span></td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <button class="btn btn-sm btn-outline-primary" @onclick="() => NavigateToEditDeal(deal.Id)">
+                                                    <i class="oi oi-pencil"></i> Edit
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-danger" @onclick="() => DeleteDeal(deal.Id)">
+                                                    <i class="oi oi-trash"></i> Delete
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        }
+
+        <!-- Products Tab -->
+        @if (activeTab == "products")
+        {
+            <div class="tab-content">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>🛍️ Products Management</h2>
+                    <div>
+                        <button class="btn btn-warning me-2" @onclick="ReseedProducts" disabled="@isReseeding">
+                            <i class="oi oi-reload me-2"></i>
+                            @if (isReseeding)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2"></span>
+                            }
+                            Reseed Products
+                        </button>
+                        <button class="btn btn-success" @onclick="ShowAddProductModal">
+                            <i class="oi oi-plus me-2"></i>Add New Product
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Product Count and Category Filter -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        @if (lastReseedTime.HasValue)
+                        {
+                            <div class="mt-2">
+                                <small class="text-muted">
+                                    <i class="oi oi-clock me-1"></i>
+                                    Last reseeded: @lastReseedTime.Value.ToString("MMM dd, yyyy 'at' h:mm tt")
+                                </small>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <label class="form-label me-2">Filter by Category:</label>
+                        <select class="form-select d-inline-block" style="width: auto;" @bind="selectedCategory" @bind:after="LoadProductsAsync">
+                            <option value="@BusinessCategory.All">All Categories</option>
+                            <option value="@BusinessCategory.Bars">Bars</option>
+                            <option value="@BusinessCategory.Restaurants">Restaurants</option>
+                            <option value="@BusinessCategory.BurgerBars">Burger Bars</option>
+                            <option value="@BusinessCategory.CoffeeShops">Coffee Shops</option>
+                            <option value="@BusinessCategory.ConvenienceStores">Convenience Stores</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="oi oi-magnifying-glass"></i>
+                            </span>
+                            <input type="text" 
+                                   class="form-control" 
+                                   placeholder="Search products by ID, description, or unit..." 
+                                   @bind="searchTerm" 
+                                   @bind:event="oninput"
+                                   @onkeyup="HandleSearch" />
+                            @if (!string.IsNullOrWhiteSpace(searchTerm))
+                            {
+                                <button class="btn btn-outline-secondary" @onclick="ClearSearch" title="Clear search">
+                                    <i class="oi oi-x"></i>
+                                </button>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <small class="text-muted">
+                            @if (!string.IsNullOrWhiteSpace(searchTerm))
+                            {
+                                <span>Showing @filteredProducts.Count of @products.Count products</span>
+                            }
+                            else
+                            {
+                                <span>Showing all @products.Count products</span>
+                            }
+                        </small>
+                    </div>
+                </div>
+
+                @if (products == null)
+                {
+                    <div class="loading">Loading products...</div>
+                }
+                else if (!products.Any())
+                {
+                    <div class="empty-state">
+                        <h4>No products found</h4>
+                        <p>Add your first product to get started!</p>
+                    </div>
+                }
+                else if (!string.IsNullOrWhiteSpace(searchTerm) && !filteredProducts.Any())
+                {
+                    <div class="empty-state">
+                        <h4>No products found</h4>
+                        <p>No products match your search term "@searchTerm"</p>
+                        <button class="btn btn-outline-secondary" @onclick="ClearSearch">Clear Search</button>
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover modern-table">
+                            <thead>
+                                <tr>
+                                    <th>Product ID</th>
+                                    <th>Description</th>
+                                    <th>Category</th>
+                                    <th>Unit</th>
+                                    <th>Price</th>
+                                    <th width="200">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var product in filteredProducts)
+                                {
+                                    <tr>
+                                        <td><strong>@product.ItemID</strong></td>
+                                        <td>@product.ItemDescription</td>
+                                        <td><span class="category-badge category-@product.Category.ToString().ToLower()">@GetCategoryDisplayName(product.Category)</span></td>
+                                        <td>@product.StockingUM</td>
+                                        <td>
+                                            @if (product.Price.HasValue)
+                                            {
+                                                <span class="price-badge">@product.Price.Value.ToString("C")</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">No price</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <button class="btn btn-sm btn-outline-primary" @onclick="() => EditProduct(product)">
+                                                    <i class="oi oi-pencil"></i> Edit
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-danger" @onclick="() => DeleteProduct(product.ItemID)">
+                                                    <i class="oi oi-trash"></i> Delete
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        }
     </div>
-</div>
+
+    <!-- Product Add/Edit Modal -->
+    @if (showProductModal)
+    {
+        <div class="modal-overlay" @onclick="CloseProductModal">
+            <div class="modal-dialog modal-lg" @onclick:stopPropagation="true">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">@(editingProduct != null ? "Edit Product" : "Add New Product")</h5>
+                        <button type="button" class="btn-close" @onclick="CloseProductModal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <EditForm Model="@currentProduct" OnValidSubmit="SaveProduct">
+                            <DataAnnotationsValidator />
+                            <ValidationSummary class="text-danger mb-3" />
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Product ID *</label>
+                                        <InputText class="form-control" @bind-Value="currentProduct.ItemID" disabled="@(editingProduct != null)" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Unit of Measure *</label>
+                                        <InputText class="form-control" @bind-Value="currentProduct.StockingUM" placeholder="e.g., lb, oz, case" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Description *</label>
+                                <InputTextArea class="form-control" @bind-Value="currentProduct.ItemDescription" rows="3" />
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Business Category *</label>
+                                        <InputSelect class="form-select" @bind-Value="currentProduct.Category">
+                                            <option value="@BusinessCategory.All">All Categories</option>
+                                            <option value="@BusinessCategory.Bars">Bars</option>
+                                            <option value="@BusinessCategory.Restaurants">Restaurants</option>
+                                            <option value="@BusinessCategory.BurgerBars">Burger Bars</option>
+                                            <option value="@BusinessCategory.CoffeeShops">Coffee Shops</option>
+                                            <option value="@BusinessCategory.ConvenienceStores">Convenience Stores</option>
+                                        </InputSelect>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Price</label>
+                                        <InputNumber class="form-control" @bind-Value="currentProduct.Price" placeholder="0.00" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-check mb-3">
+                                <InputCheckbox class="form-check-input" @bind-Value="currentProduct.IsActive" />
+                                <label class="form-check-label">Active</label>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" @onclick="CloseProductModal">Cancel</button>
+                                <button type="submit" class="btn btn-primary" disabled="@isSubmitting">
+                                    @if (isSubmitting)
+                                    {
+                                        <span class="spinner-border spinner-border-sm me-2"></span>
+                                    }
+                                    @(editingProduct != null ? "Update Product" : "Save Product")
+                                </button>
+                            </div>
+                        </EditForm>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Reseed Loading Overlay -->
+    @if (isReseeding)
+    {
+        <div class="loading-overlay">
+            <div class="loading-content">
+                <div class="spinner-border text-primary mb-3" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <h5>Reseeding Products Database</h5>
+                <p class="text-muted">This may take a few moments. Please wait...</p>
+                <div class="progress mt-3" style="height: 8px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                         role="progressbar" 
+                         style="width: 100%;" 
+                         aria-valuenow="100" 
+                         aria-valuemin="0" 
+                         aria-valuemax="100">
+                    </div>
+                </div>
+                <small class="text-muted mt-2 d-block">
+                    Processing approximately @expectedProductCount products...
+                </small>
+            </div>
+        </div>
+    }
+</AuthenticationGuard>
+
+<style>
+    .admin-container {
+        max-width: 1600px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #f8f9fa;
+        min-height: 100vh;
+    }
+
+    .admin-header {
+        background: white;
+        padding: 20px 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+    }
+
+    .admin-title {
+        color: #2c3e50;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .admin-tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 30px;
+    }
+
+    .tab-btn {
+        padding: 12px 24px;
+        border: none;
+        background: white;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .tab-btn:hover {
+        background: #e9ecef;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    }
+
+    .tab-btn.active {
+        background: #007bff;
+        color: white;
+    }
+
+    .tab-content {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .modern-table {
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .modern-table thead {
+        background: #f8f9fa;
+    }
+
+    .modern-table th {
+        border: none;
+        font-weight: 600;
+        color: #2c3e50;
+        padding: 15px;
+    }
+
+    .modern-table td {
+        border: none;
+        padding: 15px;
+        vertical-align: middle;
+    }
+
+    .modern-table tbody tr {
+        border-bottom: 1px solid #f1f3f4;
+    }
+
+    .modern-table tbody tr:hover {
+        background: #f8f9fa;
+    }
+
+    .price-badge {
+        background: #28a745;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-weight: 500;
+        font-size: 0.9em;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #6c757d;
+    }
+
+    .loading {
+        text-align: center;
+        padding: 40px;
+        color: #6c757d;
+    }
+
+    .btn-group .btn {
+        margin-right: 5px;
+    }
+
+    .category-badge {
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 0.8em;
+        font-weight: 500;
+        color: white;
+    }
+
+    .category-all { background: #6c757d; }
+    .category-bars { background: #17a2b8; }
+    .category-restaurants { background: #28a745; }
+    .category-burgerbars { background: #ffc107; color: #212529; }
+    .category-coffeeshops { background: #795548; }
+    .category-conveniencestores { background: #6f42c1; }
+
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1050;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow-y: auto;
+    }
+
+    .modal-dialog {
+        margin: 20px;
+        max-width: 800px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        position: relative;
+    }
+
+    .modal-content {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    .modal-header {
+        padding: 20px 24px 16px;
+        border-bottom: 1px solid #e9ecef;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .modal-body {
+        padding: 20px 24px;
+    }
+
+    .modal-footer {
+        padding: 16px 24px 20px;
+        border-top: 1px solid #e9ecef;
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+    }
+
+    .btn-close {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 0;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+    }
+
+    .btn-close:hover {
+        background-color: #f8f9fa;
+    }
+
+    .btn-close::before {
+        content: "×";
+        font-size: 28px;
+        line-height: 1;
+    }
+
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 1060;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .loading-content {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+    }
+
+    .loading-content h5 {
+        color: #2c3e50;
+        margin-bottom: 15px;
+    }
+
+    .loading-content p {
+        margin-bottom: 0;
+        color: #6c757d;
+    }
+
+    .loading-content .progress {
+        background-color: #e9ecef;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .loading-content .progress-bar {
+        background: linear-gradient(90deg, #007bff, #0056b3);
+        border-radius: 10px;
+    }
+
+    .input-group .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .input-group .btn-outline-secondary:hover {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: white;
+    }
+</style>
 
 @code {
-
     private List<WeeklyDeal> deals;
+    private List<ProductItem> products = new();
+    private List<ProductItem> filteredProducts = new();
+    private string activeTab = "deals";
+    private BusinessCategory selectedCategory = BusinessCategory.All;
+    private string searchTerm = string.Empty;
+    private int totalProductCount = 0;
+    private int expectedProductCount = 0;
+    private DateTime? lastReseedTime = null;
+    
+    // Product modal state
+    private bool showProductModal = false;
+    private bool isSubmitting = false;
+    private bool isReseeding = false;
+    private ProductItem currentProduct = new();
+    private ProductItem? editingProduct = null;
 
     protected override async Task OnInitializedAsync()
     {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
+        try
+        {
+            // First verify authentication
+            if (!await VerifyAuthenticationAsync())
+            {
+                navigationManager.NavigateTo("/login");
+                return;
+            }
 
-        if (!user.Identity.IsAuthenticated)
-        {
-            navigationManager.NavigateTo("/");
+            await LoadDealsAsync();
+            await LoadProductsAsync();
+            totalProductCount = await GetTotalProductCount();
+            expectedProductCount = await GetExpectedProductCount();
+            
+            // Initialize filtered products
+            filteredProducts = products.ToList();
+            
+            // Set initial last reseed time if products exist
+            if (totalProductCount > 0)
+            {
+                lastReseedTime = DateTime.Now; // For now, just set to current time
+            }
         }
-        else if (!user.IsInRole("admin"))
+        catch (Exception ex)
         {
-            navigationManager.NavigateTo("/");
+            // If there's an error loading data, redirect to login
+            navigationManager.NavigateTo("/login");
         }
-        await LoadDealsAsync();
+    }
+
+    private async Task<bool> VerifyAuthenticationAsync()
+    {
+        try
+        {
+            var response = await HttpClient.GetAsync("api/admin/validate-admin");
+            return response.IsSuccessStatusCode;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Set up periodic authentication check every 5 minutes
+            var timer = new System.Threading.Timer(async _ =>
+            {
+                if (!await VerifyAuthenticationAsync())
+                {
+                    await InvokeAsync(() =>
+                    {
+                        navigationManager.NavigateTo("/login");
+                        StateHasChanged();
+                    });
+                }
+            }, null, TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5));
+        }
     }
 
     private async Task LoadDealsAsync()
@@ -63,11 +697,175 @@
         deals = ideal.deals;
     }
 
+    private async Task LoadProductsAsync()
+    {
+        if (selectedCategory == BusinessCategory.All)
+        {
+            products = await productService.GetProducts();
+        }
+        else
+        {
+            products = await productService.GetProductsByCategory(selectedCategory);
+        }
+        
+        // Apply search filter to the loaded products
+        await ApplySearchFilter();
+        
+        // Force a UI refresh to update the product count
+        StateHasChanged();
+    }
+
+    private async Task ApplySearchFilter()
+    {
+        if (string.IsNullOrWhiteSpace(searchTerm))
+        {
+            filteredProducts = products.ToList();
+        }
+        else
+        {
+            var searchLower = searchTerm.ToLower();
+            filteredProducts = products.Where(p =>
+                (p.ItemID?.ToLower().Contains(searchLower) ?? false) ||
+                (p.ItemDescription?.ToLower().Contains(searchLower) ?? false) ||
+                (p.StockingUM?.ToLower().Contains(searchLower) ?? false)
+            ).ToList();
+        }
+        await Task.CompletedTask; // Ensure async compliance
+    }
+
+    private async Task HandleSearch()
+    {
+        ApplySearchFilter();
+        StateHasChanged();
+        await Task.CompletedTask; // Ensure async compliance
+    }
+
+    private async Task ClearSearch()
+    {
+        searchTerm = string.Empty;
+        ApplySearchFilter();
+        StateHasChanged();
+        await Task.CompletedTask; // Ensure async compliance
+    }
+
+    private async Task<int> GetTotalProductCount()
+    {
+        try
+        {
+            var response = await HttpClient.GetAsync("api/admin/product-count");
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<ProductCountResponse>();
+                return result?.ProductCount ?? 0;
+            }
+        }
+        catch
+        {
+            // If we can't get the count, return the current products count
+        }
+        return products?.Count ?? 0;
+    }
+
+    private async Task<int> GetExpectedProductCount()
+    {
+        try
+        {
+            // Get the actual repository count from the server
+            var response = await HttpClient.GetAsync("api/admin/repository-count");
+            Console.WriteLine($"Repository count response status: {response.StatusCode}");
+            
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<dynamic>();
+                Console.WriteLine($"Repository count response: {result}");
+                
+                if (result != null)
+                {
+                    try
+                    {
+                        var repoCount = result.GetProperty("RepositoryCount");
+                        Console.WriteLine($"RepositoryCount property: {repoCount}, ValueKind: {repoCount.ValueKind}");
+                        
+                        if (repoCount.ValueKind == System.Text.Json.JsonValueKind.Number)
+                        {
+                            var count = repoCount.GetInt32();
+                            Console.WriteLine($"Returning repository count: {count}");
+                            return count;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error parsing RepositoryCount: {ex.Message}");
+                        // Property doesn't exist or isn't a number
+                    }
+                }
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Repository count error response: {errorContent}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Exception getting repository count: {ex.Message}");
+            // If we can't get the count, return the fallback value
+        }
+        Console.WriteLine("Falling back to default count: 2800");
+        return 2800; // Fallback count
+    }
+
     private async Task DeleteDeal(int dealId)
     {
-        await ideal.DeleteDeal(dealId);
-        //await localStorageService.DeleteDealAsync(dealId);
-        await LoadDealsAsync();
+        if (await ConfirmDelete())
+        {
+            await ideal.DeleteDeal(dealId);
+            await LoadDealsAsync();
+        }
+    }
+
+    private async Task DeleteProduct(string productId)
+    {
+        if (await ConfirmDelete())
+        {
+            try
+            {
+                await productService.DeleteProduct(productId);
+                await LoadProductsAsync();
+            }
+            catch (Exception ex)
+            {
+                // Handle error - could show a toast notification
+            }
+        }
+    }
+
+    private async Task<bool> ConfirmDelete()
+    {
+        // Simple confirmation - in a real app you'd use a modal
+        return true; // For now, always confirm
+    }
+
+    private void SetActiveTab(string tab)
+    {
+        activeTab = tab;
+        if (tab == "products")
+        {
+            _ = LoadProductsAsync(); // Fire and forget
+            _ = RefreshTotalCount(); // Fire and forget
+        }
+        else
+        {
+            // Clear search when switching away from products tab
+            searchTerm = string.Empty;
+        }
+    }
+
+    private async Task RefreshTotalCount()
+    {
+        totalProductCount = await GetTotalProductCount();
+        expectedProductCount = await GetExpectedProductCount();
+        StateHasChanged();
     }
 
     private void NavigateToAddDealPage()
@@ -75,4 +873,171 @@
         navigationManager.NavigateTo("/admin/deals/add");
     }
 
+    private void NavigateToEditDeal(int dealId)
+    {
+        navigationManager.NavigateTo($"/admin/deals/edit/{dealId}");
+    }
+
+    private void ShowAddProductModal()
+    {
+        editingProduct = null;
+        currentProduct = new ProductItem();
+        showProductModal = true;
+    }
+
+    private void EditProduct(ProductItem product)
+    {
+        editingProduct = product;
+        currentProduct = new ProductItem
+        {
+            ItemID = product.ItemID,
+            ItemDescription = product.ItemDescription,
+            StockingUM = product.StockingUM,
+            Category = product.Category,
+            Price = product.Price,
+            IsActive = product.IsActive
+        };
+        showProductModal = true;
+    }
+
+    private void CloseProductModal()
+    {
+        if (!isSubmitting) // Don't allow closing while submitting
+        {
+            showProductModal = false;
+            editingProduct = null;
+            currentProduct = new ProductItem();
+        }
+    }
+
+    private async Task SaveProduct()
+    {
+        isSubmitting = true;
+        try
+        {
+            if (editingProduct != null)
+            {
+                // Update existing product
+                await productService.UpdateProduct(currentProduct);
+            }
+            else
+            {
+                // Add new product
+                await productService.AddProduct(currentProduct);
+            }
+            
+            await LoadProductsAsync();
+            CloseProductModal();
+        }
+        catch (Exception ex)
+        {
+            // Handle error - could show a toast notification
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+
+    private async Task ReseedProducts()
+    {
+        if (await ConfirmReseed())
+        {
+            isReseeding = true;
+            StateHasChanged(); // Force UI update to show loading state
+            
+            try
+            {
+                var response = await HttpClient.PostAsync("api/admin/reseed-products", null);
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<ReseedResponse>();
+                    // Show success message
+                    var message = $"✅ Products reseeded successfully!\n\n" +
+                                 $"📊 Total products in database: {result?.ProductCount ?? 0}\n" +
+                                 $"📋 Expected count: {expectedProductCount}\n" +
+                                 $"⏰ Completed at: {DateTime.Now:MMM dd, yyyy 'at' h:mm tt}";
+                    
+                    await JSRuntime.InvokeVoidAsync("alert", message);
+                    await LoadProductsAsync(); // Refresh the products list
+                    totalProductCount = await GetTotalProductCount(); // Refresh the total count
+                    lastReseedTime = DateTime.Now; // Update the last reseed time
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    var errorMessage = $"Failed to reseed products. Server returned: {response.StatusCode}\n\nResponse: {errorContent}";
+                    await JSRuntime.InvokeVoidAsync("alert", errorMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = $"Error reseeding products: {ex.Message}";
+                if (ex.InnerException != null)
+                {
+                    errorMessage += $"\n\nInner Exception: {ex.InnerException.Message}";
+                }
+                await JSRuntime.InvokeVoidAsync("alert", errorMessage);
+            }
+            finally
+            {
+                isReseeding = false;
+                StateHasChanged(); // Force UI update to hide loading state
+            }
+        }
+    }
+
+    private async Task<bool> ConfirmReseed()
+    {
+        var message = $"⚠️ WARNING: Database Reseed Operation\n\n" +
+                     $"This will:\n" +
+                     $"• Clear ALL existing products (currently {totalProductCount})\n" +
+                     $"• Reseed with complete product list ({expectedProductCount} products)\n" +
+                     $"• Take several minutes to complete\n" +
+                     $"• Cannot be undone\n\n" +
+                     $"Are you sure you want to continue?";
+        
+        return await JSRuntime.InvokeAsync<bool>("confirm", message);
+    }
+
+    private string GetCategoryDisplayName(BusinessCategory category)
+    {
+        return category switch
+        {
+            BusinessCategory.All => "All Categories",
+            BusinessCategory.Bars => "Bars",
+            BusinessCategory.Restaurants => "Restaurants",
+            BusinessCategory.BurgerBars => "Burger Bars",
+            BusinessCategory.CoffeeShops => "Coffee Shops",
+            BusinessCategory.ConvenienceStores => "Convenience Stores",
+            _ => category.ToString()
+        };
+    }
+
+    private async Task Logout()
+    {
+        try
+        {
+            // Direct server logout call
+            await HttpClient.PostAsync("api/admin/logout", null);
+            navigationManager.NavigateTo("/");
+        }
+        catch
+        {
+            // If logout fails, still redirect to home
+            navigationManager.NavigateTo("/");
+        }
+    }
+
+    // Response models for API calls
+    private class ProductCountResponse
+    {
+        public int ProductCount { get; set; }
+    }
+
+    private class ReseedResponse
+    {
+        public string Message { get; set; } = string.Empty;
+        public int ProductCount { get; set; }
+    }
 }
